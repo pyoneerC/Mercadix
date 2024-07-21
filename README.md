@@ -7,8 +7,8 @@ Este proyecto es una aplicación web desarrollada en Flask que permite a los usu
 > [!NOTE]
 > [Disponible en todos los navegadores web!](mercado-libre-price-chart.vercel.app)
 
-![Imagen de la Aplicación](media/ml2.png)
-![GIF de la Aplicación](media/ml1.gif)
+![Imagen de la Aplicación](media/price_histogram.png)
+![GIF de la Aplicación](media/demonstration.gif)
 
 > [!TIP]
 > Puedes poner cualquier artículo que desees en la barra de búsqueda!
@@ -65,7 +65,7 @@ La aplicación estará disponible en `http://127.0.0.1:5000`
 3. Haz clic en el botón para generar el gráfico.
 4. En la página de resultados, podrás ver el histograma de precios junto con estadísticas como el precio promedio, mediano, máximo, y mínimo.
 
-![Histograma de Precios](media/ml3.png)
+![Histograma de Precios](media/chocolate_histogram.png)
 
 ## Tecnologías Utilizadas
 
