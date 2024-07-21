@@ -6,6 +6,7 @@
       <title>Mercado Libre Price Chart</title>
       <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
       <link rel="stylesheet" href="{{ url_for('static', filename='css/idxstyle.css') }}">
+
    </head>
    <body>
       <div class="container">
@@ -23,14 +24,6 @@
             <a href="https://github.com/pyoneerC/mercado-libre-price-chart" target="_blank">View on GitHub</a>
          </div>
       </div>
-      <script>
-         document.getElementById('price-form').addEventListener('submit', function(event) {
-             document.getElementById('spinner').style.display = 'block';
-             event.preventDefault();
-             setTimeout(function() {
-                 document.getElementById('price-form').submit();
-             }, 100);
-         });
-      </script>
+   <script src="{{ url_for('static', filename='js/index.js') }}"></script>
    </body>
 </html>
