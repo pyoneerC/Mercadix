@@ -75,7 +75,6 @@ def plot_prices(prices_list, item, url, image_urls):
     plt.figure(figsize=(10, 5))
     plt.hist(prices_list, bins=20, color='lightblue', edgecolor='black')
 
-    # Format x-axis
     plt.ticklabel_format(style='plain', axis='x')
     formatter = ticker.FuncFormatter(format_x)
     plt.gca().xaxis.set_major_formatter(formatter)
@@ -85,7 +84,6 @@ def plot_prices(prices_list, item, url, image_urls):
     x_pos_offset = 500 if median <= 10000 else 1000 if median <= 20000 \
         else 2000 if median <= 50000 else 3500 if median <= 70000 else 10000
 
-    # Plot labels and title
     plt.xlabel('Price in ARS')
     plt.ylabel('Frequency')
     current_date = datetime.date.today().strftime('%d/%m/%Y')
@@ -93,7 +91,6 @@ def plot_prices(prices_list, item, url, image_urls):
               f'Number of items indexed: {len(prices_list)} '
               f'({request.args.get("number_of_pages")} pages)\nURL: {url}\n')
 
-    # Statistics
     std_dev = np.std(prices_list)
     avg_price = np.mean(prices_list)
     median_price = np.median(prices_list)
@@ -114,7 +111,6 @@ def plot_prices(prices_list, item, url, image_urls):
 
     plt.legend(['Median', 'Avg', 'Max', 'Min', 'Std Dev', '25th percentile'], loc='upper right')
 
-    # Display image of the first item
     if image_urls:
         img = Image.open(io.BytesIO(requests.get(image_urls[0]).content))
         ylim = plt.gca().get_ylim()
@@ -126,13 +122,11 @@ def plot_prices(prices_list, item, url, image_urls):
     plt.grid(True)
     plt.tight_layout()
 
-    # Save the plot to an in-memory buffer
     buffer = io.BytesIO()
     plt.savefig(buffer, format='png')
     plt.close()
     buffer.seek(0)
 
-    # Convert the buffer to a base64 string
     plot_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
 
     return plot_base64
@@ -152,7 +146,7 @@ def show_plot():
         error_message = "Failed to generate plot. Please try again later."
         return render_template('error.html', error_message=error_message), 500
 
-    return render_template('show_plot.html', plot_base64=plot_base64)
+    return render_template('show_plot.html', plot_base64=plot_base64, url=url)
 
 
 @app.errorhandler(500)
