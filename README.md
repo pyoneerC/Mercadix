@@ -4,6 +4,12 @@
 
 Este proyecto es una aplicación web desarrollada en Flask que permite a los usuarios consultar precios de productos en MercadoLibre y visualizar un histograma de precios. Utiliza la API de [DolarAPI](https://dolarapi.com/) para obtener el tipo de cambio actual y presenta los datos en gráficos generados con Matplotlib.
 
+![GIF de la Aplicación](media/ml1.gif)
+![Imagen de la Aplicación](media/ml2.png)
+
+> [!TIP]
+> Puedes poner cualquier artículo que desees en la barra de búsqueda!
+
 ## Funcionalidades
 
 - **Consulta de Precios**: Permite al usuario ingresar el nombre de un producto y el número de páginas para consultar en MercadoLibre.
@@ -49,8 +55,14 @@ La aplicación estará disponible en `http://127.0.0.1:5000`
 
 1. Abre tu navegador y accede a [http://127.0.0.1:5000](http://127.0.0.1:5000).
 2. En la página principal, ingresa el nombre del producto y el número de páginas que deseas consultar.
+
+> [!WARNING]
+> Cuidado con ingresar un número muy alto de páginas, ya que puede llevar varios segundos e incluso que la aplicación falle si tu internet es lento.
+
 3. Haz clic en el botón para generar el gráfico.
 4. En la página de resultados, podrás ver el histograma de precios junto con estadísticas como el precio promedio, mediano, máximo, y mínimo.
+
+![Histograma de Precios](media/ml3.png)
 
 ## Tecnologías Utilizadas
 
@@ -67,4 +79,4 @@ Este proyecto es de código abierto y las contribuciones son bienvenidas.
 
 ## Licencia
 
-Distribuido bajo la licencia MIT.
+Distribuido bajo la licencia MIT. Haz clic [aquí](LICENSE) para más información.
