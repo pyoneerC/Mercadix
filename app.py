@@ -12,7 +12,7 @@ import io
 import base64
 
 app = Flask(__name__)
-API_URL = "https://dolarapi.com/v1/dolares/blue"
+API_URL = "https://fastapiproject-1-eziw.onrender.com/blue"
 
 
 # Custom filter to format numbers with commas
@@ -81,6 +81,7 @@ def format_x(value, tick_number):
 def plot_prices(prices_list, item, url, image_urls):
     """Plot a histogram of the prices."""
     venta_dolar = get_exchange_rate()
+    venta_dolar = float(venta_dolar.replace(" ARS", ""))
     if not venta_dolar:
         app.logger.error("Failed to get exchange rate.")
         return None
