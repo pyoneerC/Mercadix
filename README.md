@@ -20,6 +20,9 @@ Este proyecto es una aplicación web desarrollada en Flask que permite a los usu
 - **Visualización de Imágenes**: Incluye una imagen representativa del primer resultado de la búsqueda en el gráfico.
 - **Interfaz de Usuario**: Ofrece una interfaz simple para introducir los parámetros de búsqueda y mostrar los resultados.
 
+> [!TIP]
+> Puedes descargar la imagen del gráfico y guardarla haciendo click en el botón "Download Image".
+
 ## Instalación
 
 Para ejecutar este proyecto en tu máquina local, sigue estos pasos:
@@ -54,16 +57,13 @@ Finalmente, ejecuta la aplicación con el siguiente comando:
 
 La aplicación estará disponible en `http://127.0.0.1:5000`
 
-## Uso
-
-1. Abre tu navegador y accede a [http://127.0.0.1:5000](http://127.0.0.1:5000).
-2. En la página principal, ingresa el nombre del producto y el número de páginas que deseas consultar.
-
 > [!WARNING]
 > Cuidado con ingresar un número muy alto de páginas, ya que puede llevar varios segundos e incluso que la aplicación falle si tu internet es lento.
 
-3. Haz clic en el botón para generar el gráfico.
-4. En la página de resultados, podrás ver el histograma de precios junto con estadísticas como el precio promedio, mediano, máximo, y mínimo.
+
+> [!CAUTION]
+> Intenta ser lo más específico posible en tu búsqueda para obtener resultados más precisos. Puedes ver de donde se obtienen los datos clickeando el boton que dice "View on MercadoLibre".
+
 
 ![Histograma de Precios](media/chocolate_histogram.png)
 
