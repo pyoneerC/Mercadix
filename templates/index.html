@@ -3,15 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Item Price Histogram</title>
+    <title>Mercado Libre Price Chart</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin: 10px 0 5px;
+            color: #555;
+        }
+        input[type="text"], input[type="number"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #777;
+        }
+    </style>
 </head>
 <body>
-    <form action="/" method="post">
-        <label for="item">Item:</label>
-        <input type="text" id="item" name="item" required>
-        <label for="number_of_pages">Number of Pages:</label>
-        <input type="number" id="number_of_pages" name="number_of_pages" required>
-        <button type="submit">Generate Plot</button>
-    </form>
+    <div class="container">
+        <h1>Mercado Libre Price Chart</h1>
+        <form action="/" method="post">
+            <label for="item">Item:</label>
+            <input type="text" id="item" name="item" required placeholder="raqueta de tenis">
+            <label for="number_of_pages">Number of Pages (1-50):</label>
+            <input type="number" id="number_of_pages" name="number_of_pages" required min="1" max="50" value="5">
+            <button type="submit">Generate Plot</button>
+        </form>
+        <div class="footer">
+            &copy; 2024 PyoneerC. Published under the MIT License.
+            <a href="https://github.com/pyoneerC/mercado-libre-price-chart" target="_blank">View on GitHub</a>
+        </div>
+    </div>
 </body>
 </html>
