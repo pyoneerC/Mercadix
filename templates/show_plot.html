@@ -67,6 +67,14 @@
         .button-group a:hover {
             background: #0056b3;
         }
+        .stats {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .stats p {
+            font-size: 16px;
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -77,6 +85,12 @@
             <a href="{{ url_for('index') }}">Go Back</a>
             <a href="data:image/png;base64,{{ plot_base64 }}" download="price_histogram.png">Download Image</a>
             <a href="{{ url }}" target="_blank">View on Mercado Libre</a>
+        </div>
+        <div class="stats">
+            <p><strong>Average Price:</strong> {{ avg_price | format_number }} ARS</p>
+            <p><strong>Median Price:</strong> {{ median_price | format_number }} ARS</p>
+            <p><strong>Maximum Price:</strong> {{ max_price | format_number }} ARS</p>
+            <p><strong>Minimum Price:</strong> {{ min_price | format_number }} ARS</p>
         </div>
         <div class="footer">
             &copy; 2024 PyoneerC. Published under the MIT License.

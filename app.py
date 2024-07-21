@@ -14,6 +14,14 @@ import base64
 app = Flask(__name__)
 API_URL = "https://dolarapi.com/v1/dolares/blue"
 
+# Custom filter to format numbers with commas
+@app.template_filter('format_number')
+def format_number(value):
+    try:
+        return "{:,}".format(int(value))
+    except (ValueError, TypeError):
+        return value
+
 
 def get_exchange_rate():
     """Fetch the current exchange rate from the API."""
@@ -141,12 +149,18 @@ def show_plot():
         error_message = "Failed to fetch prices. Please try searching fewer pages or check the item name."
         return render_template('error.html', error_message=error_message), 500
 
+    median_price = float(np.median(prices_list))
+    avg_price = float(np.mean(prices_list))
+    max_price = float(max(prices_list))
+    min_price = float(min(prices_list))
+
     plot_base64 = plot_prices(prices_list, item, url, image_urls)
     if plot_base64 is None:
         error_message = "Failed to generate plot. Please try again later."
         return render_template('error.html', error_message=error_message), 500
 
-    return render_template('show_plot.html', plot_base64=plot_base64, url=url)
+    return render_template('show_plot.html', plot_base64=plot_base64, url=url, median_price=median_price,
+                            avg_price=avg_price, max_price=max_price, min_price=min_price)
 
 
 @app.errorhandler(500)
