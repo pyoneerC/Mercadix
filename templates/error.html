@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Price Histogram</title>
+    <title>Error - Something Went Wrong</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f9;
+            background-color: #f8d7da;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            color: #333;
+            color: #721c24;
         }
         .container {
             background: #fff;
@@ -26,30 +26,11 @@
         }
         h1 {
             margin-bottom: 20px;
-            color: #007bff;
+            color: #721c24;
         }
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
-        }
-        img:hover {
-            transform: scale(1.05);
-        }
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            color: #777;
-        }
-        .footer a {
-            color: #007bff;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        .footer a:hover {
-            color: #0056b3;
+        p {
+            margin: 10px 0;
+            color: #721c24;
         }
         .button-group {
             margin-top: 20px;
@@ -67,19 +48,22 @@
         .button-group a:hover {
             background: #0056b3;
         }
+        .icon {
+            font-size: 50px;
+            color: #721c24;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Price Histogram</h1>
-        <img src="data:image/png;base64,{{ plot_base64 }}" alt="Price Histogram">
+        <div class="icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h1>Oops! Something Went Wrong.</h1>
+        <p>{{ error_message }}</p>
         <div class="button-group">
             <a href="{{ url_for('index') }}">Go Back</a>
-            <a href="data:image/png;base64,{{ plot_base64 }}" download="price_histogram.png">Download Image</a>
-        </div>
-        <div class="footer">
-            &copy; 2024 PyoneerC. Published under the MIT License.
-            <a href="https://github.com/pyoneerC/mercado-libre-price-chart" target="_blank">View on GitHub</a>
         </div>
     </div>
 </body>

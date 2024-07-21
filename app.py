@@ -9,7 +9,6 @@ import requests
 import datetime
 import re
 import io
-import os
 import base64
 
 app = Flask(__name__)
@@ -71,7 +70,7 @@ def plot_prices(prices_list, item, url, image_urls):
     venta_dolar = get_exchange_rate()
     if not venta_dolar:
         app.logger.error("Failed to get exchange rate.")
-        return
+        return None
 
     plt.figure(figsize=(10, 5))
     plt.hist(prices_list, bins=20, color='lightblue', edgecolor='black')
@@ -145,12 +144,20 @@ def show_plot():
     number_of_pages = int(request.args.get('number_of_pages'))
     prices_list, url, image_urls = get_prices(item, number_of_pages)
     if prices_list is None or url is None:
-        return "Failed to fetch prices. Please try searching less pages"
+        error_message = "Failed to fetch prices. Please try searching fewer pages or check the item name."
+        return render_template('error.html', error_message=error_message), 500
+
     plot_base64 = plot_prices(prices_list, item, url, image_urls)
     if plot_base64 is None:
-        return "Failed to generate plot."
+        error_message = "Failed to generate plot. Please try again later."
+        return render_template('error.html', error_message=error_message), 500
 
     return render_template('show_plot.html', plot_base64=plot_base64)
+
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    return render_template('error.html', error_message="An unexpected error occurred. Please try again later."), 500
 
 
 if __name__ == '__main__':
