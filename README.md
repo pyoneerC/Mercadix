@@ -2,9 +2,7 @@
 
 ## Descripción
 
-Este proyecto es una aplicación web desarrollada en Flask que permite a los usuarios consultar precios de productos en MercadoLibre y visualizar un histograma de precios. 
-Utiliza la API de [monedas-api](monedas-api) (desarrollada por mí) para obtener el tipo de cambio a dólares 
-actual y presenta los datos en un histograma generado con Matplotlib.
+Este proyecto es una aplicación web desarrollada en Flask que permite consultar precios de productos en MercadoLibre y visualizarlos en un histograma. Utiliza web scraping para obtener los precios, la API [monedas-api](https://github.com/pyoneerC/monedas-api) (desarrollada por mí) para el tipo de cambio actualizado a dólares, y Matplotlib para generar gráficos claros y concisos que representan eficazmente la variabilidad de los precios.
 
 > [!NOTE]
 > [Disponible en todos los navegadores web!](mercado-libre-price-chart.vercel.app)
