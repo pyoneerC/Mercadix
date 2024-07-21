@@ -10,6 +10,7 @@ import datetime
 import re
 import io
 import os
+import base64
 
 app = Flask(__name__)
 API_URL = "https://dolarapi.com/v1/dolares/blue"
@@ -33,18 +34,6 @@ def index():
         number_of_pages = int(request.form['number_of_pages'])
         return redirect(url_for('show_plot', item=item, number_of_pages=number_of_pages))
     return render_template('index.html')
-
-
-@app.route('/show_plot')
-def show_plot():
-    item = request.args.get('item')
-    number_of_pages = int(request.args.get('number_of_pages'))
-    prices_list, url, image_urls = get_prices(item, number_of_pages)
-    if prices_list is None or url is None:
-        return "Failed to fetch prices. Please try searching less pages"
-    plot_prices(prices_list, item, url, image_urls)
-    plot_path = os.path.join('static', 'plot.png')
-    return render_template('show_plot.html', plot_path=plot_path, url=url)
 
 
 def get_prices(item, number_of_pages):
@@ -137,10 +126,32 @@ def plot_prices(prices_list, item, url, image_urls):
 
     plt.grid(True)
     plt.tight_layout()
-    plot_path = os.path.join('static', 'plot.png')
-    plt.savefig(plot_path)
+
+    # Save the plot to an in-memory buffer
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png')
     plt.close()
+    buffer.seek(0)
+
+    # Convert the buffer to a base64 string
+    plot_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+    return plot_base64
+
+
+@app.route('/show_plot')
+def show_plot():
+    item = request.args.get('item')
+    number_of_pages = int(request.args.get('number_of_pages'))
+    prices_list, url, image_urls = get_prices(item, number_of_pages)
+    if prices_list is None or url is None:
+        return "Failed to fetch prices. Please try searching less pages"
+    plot_base64 = plot_prices(prices_list, item, url, image_urls)
+    if plot_base64 is None:
+        return "Failed to generate plot."
+
+    return render_template('show_plot.html', plot_base64=plot_base64)
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8000)
+    app.run(debug=True)

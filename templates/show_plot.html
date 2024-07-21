@@ -1,60 +1,12 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mercado Libre - Scanner Results</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-        h1 {
-            color: #444;
-        }
-        .container {
-            text-align: center;
-            padding: 20px;
-            background: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            max-width: 90%;
-            margin: 20px;
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-        a {
-            color: #007BFF;
-            text-decoration: none;
-            margin-top: 20px;
-            display: inline-block;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <title>Price Histogram</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Mercado Libre - Scanner Results</h1>
-        <img src="{{ plot_path }}" alt="Price Histogram">
-        <br>
-        <a href="{{ url }}" target="_blank">Visit URL</a>
-        <br>
-        <a href="/">Go back</a>
-    </div>
+    <h1>Price Histogram</h1>
+    <img src="data:image/png;base64,{{ plot_base64 }}" alt="Price Histogram">
 </body>
 </html>
