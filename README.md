@@ -11,7 +11,7 @@ Este proyecto es una aplicación web desarrollada en Flask que permite consultar
 ![GIF de la Aplicación](media/demonstration.gif)
 
 > [!TIP]
-> Puedes poner cualquier artículo que desees en la barra de búsqueda!
+> Puedes ingresar cualquier artículo que desees en la barra de búsqueda!
 
 ## Funcionalidades
 
@@ -62,7 +62,7 @@ La aplicación estará disponible en `http://127.0.0.1:5000`
 
 
 > [!CAUTION]
-> Intenta ser lo más específico posible en tu búsqueda para obtener resultados más precisos. Puedes ver de donde se obtienen los datos clickeando el boton que dice "View on MercadoLibre".
+> Intenta ser lo más específico posible en tu búsqueda para obtener resultados más precisos. Puedes ver de donde se obtienen los datos clickeando el botón que dice "View on MercadoLibre".
 
 
 ![Histograma de Precios](media/chocolate_histogram.png)
@@ -82,4 +82,4 @@ Este proyecto es de código abierto y las contribuciones son bienvenidas.
 
 ## Licencia
 
-Distribuido bajo la licencia MIT. Haz clic [aquí](LICENSE) para más información.
+Este proyecto está licenciado bajo la licencia MIT. Para más información, consulta el archivo [LICENSE](LICENSE).
