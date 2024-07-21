@@ -1,102 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Price Histogram</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: #333;
-        }
-        .container {
-            background: #fff;
-            padding: 20px 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        h1 {
-            margin-bottom: 20px;
-            color: #007bff;
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
-        }
-        img:hover {
-            transform: scale(1.05);
-        }
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            color: #777;
-        }
-        .footer a {
-            color: #007bff;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        .footer a:hover {
-            color: #0056b3;
-        }
-        .button-group {
-            margin-top: 20px;
-        }
-        .button-group a {
-            display: inline-block;
-            background: #007bff;
-            color: #fff;
-            padding: 10px 15px;
-            border-radius: 5px;
-            text-decoration: none;
-            margin: 5px;
-            transition: background 0.3s;
-        }
-        .button-group a:hover {
-            background: #0056b3;
-        }
-        .stats {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .stats p {
-            font-size: 16px;
-            color: #333;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Price Histogram</h1>
-        <img src="data:image/png;base64,{{ plot_base64 }}" alt="Price Histogram">
-        <div class="button-group">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Price Histogram</title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+      <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/showstyle.css') }}">
+   </head>
+   <body>
+      <div class="container">
+         <h1>Price Histogram</h1>
+         <img src="data:image/png;base64,{{ plot_base64 }}" alt="Price Histogram">
+         <div class="button-group">
             <a href="{{ url_for('index') }}">Go Back</a>
             <a href="data:image/png;base64,{{ plot_base64 }}" download="price_histogram.png">Download Image</a>
             <a href="{{ url }}" target="_blank">View on Mercado Libre</a>
-        </div>
-        <div class="stats">
+         </div>
+         <div class="stats">
             <p><strong>Average Price:</strong> {{ avg_price | format_number }} ARS</p>
             <p><strong>Median Price:</strong> {{ median_price | format_number }} ARS</p>
             <p><strong>Maximum Price:</strong> {{ max_price | format_number }} ARS</p>
             <p><strong>Minimum Price:</strong> {{ min_price | format_number }} ARS</p>
-        </div>
-        <div class="footer">
+         </div>
+         <div class="footer">
             &copy; 2024 PyoneerC. Published under the MIT License.
             <a href="https://github.com/pyoneerC/mercado-libre-price-chart" target="_blank">View on GitHub</a>
-        </div>
-    </div>
-</body>
+         </div>
+      </div>
+   </body>
 </html>

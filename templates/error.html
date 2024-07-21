@@ -1,71 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error - Something Went Wrong</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8d7da;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: #721c24;
-        }
-        .container {
-            background: #fff;
-            padding: 20px 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        h1 {
-            margin-bottom: 20px;
-            color: #721c24;
-        }
-        p {
-            margin: 10px 0;
-            color: #721c24;
-        }
-        .button-group {
-            margin-top: 20px;
-        }
-        .button-group a {
-            display: inline-block;
-            background: #007bff;
-            color: #fff;
-            padding: 10px 15px;
-            border-radius: 5px;
-            text-decoration: none;
-            margin: 5px;
-            transition: background 0.3s;
-        }
-        .button-group a:hover {
-            background: #0056b3;
-        }
-        .icon {
-            font-size: 50px;
-            color: #721c24;
-            margin-bottom: 20px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="icon">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Error - Something Went Wrong</title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/errorstyle.css') }}">
+      <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+   </head>
+   <body>
+      <div class="container">
+         <div class="icon">
             <i class="fas fa-exclamation-triangle"></i>
-        </div>
-        <h1>Oops! Something Went Wrong.</h1>
-        <p>{{ error_message }}</p>
-        <div class="button-group">
+         </div>
+         <h1>Oops! Something Went Wrong.</h1>
+         <p>{{ error_message }}</p>
+         <div class="button-group">
             <a href="{{ url_for('index') }}">Go Back</a>
-        </div>
-    </div>
-</body>
+         </div>
+      </div>
+   </body>
 </html>
