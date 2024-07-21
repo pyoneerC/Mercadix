@@ -14,6 +14,7 @@ import base64
 app = Flask(__name__)
 API_URL = "https://dolarapi.com/v1/dolares/blue"
 
+
 # Custom filter to format numbers with commas
 @app.template_filter("format_number")
 def format_number(value):
@@ -183,6 +184,7 @@ def show_plot():
     avg_price = float(np.mean(prices_list))
     max_price = float(max(prices_list))
     min_price = float(min(prices_list))
+    current_date = datetime.date.today().strftime("%d/%m/%Y")
 
     plot_base64 = plot_prices(prices_list, item, url, image_urls)
     if plot_base64 is None:
@@ -197,6 +199,9 @@ def show_plot():
         avg_price=avg_price,
         max_price=max_price,
         min_price=min_price,
+        item=item,
+        number_of_pages=number_of_pages,
+        current_date=current_date,
     )
 
 

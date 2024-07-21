@@ -14,7 +14,8 @@
          <img src="data:image/png;base64,{{ plot_base64 }}" alt="Price Histogram">
          <div class="button-group">
             <a href="{{ url_for('index') }}">Go Back</a>
-            <a href="data:image/png;base64,{{ plot_base64 }}" download="price_histogram.png">Download Image</a>
+            <a href="data:image/png;base64,{{ plot_base64 }}" download="{{ item }}_price_histogram_MercadoLibre_{{ current_date }}_{{ number_of_pages }}_pages.png">
+                Download Image
             <a href="{{ url }}" target="_blank">View on Mercado Libre</a>
          </div>
          <div class="stats">
