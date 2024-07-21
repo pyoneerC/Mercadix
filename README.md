@@ -1,4 +1,4 @@
-# Proyecto: MercadoLibre Price Chart
+# MercadoLibre Price Chart
 
 ## Descripción
 
