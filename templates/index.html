@@ -22,8 +22,8 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 500px; /* Limits container width */
-            text-align: center; /* Centers text in the container */
+            max-width: 500px;
+            text-align: center;
         }
         h1 {
             margin-bottom: 20px;
@@ -32,7 +32,7 @@
         form {
             display: flex;
             flex-direction: column;
-            align-items: center; /* Center form elements horizontally */
+            align-items: center;
         }
         label {
             margin: 10px 0 5px;
@@ -45,7 +45,7 @@
             margin-bottom: 15px;
             font-size: 16px;
             width: 100%;
-            max-width: 400px; /* Limits input width */
+            max-width: 400px;
         }
         button {
             padding: 10px;
@@ -56,7 +56,7 @@
             font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s;
-            position: relative; /* Needed for spinner positioning */
+            position: relative;
         }
         button:hover {
             background-color: #0056b3;
@@ -65,11 +65,11 @@
             border: 4px solid rgba(0, 0, 0, 0.1);
             border-left: 4px solid #007bff;
             border-radius: 50%;
-            width: 30px; /* Adjusted size for a cleaner look */
-            height: 30px; /* Adjusted size for a cleaner look */
+            width: 30px;
+            height: 30px;
             animation: spin 1s linear infinite;
-            margin-top: 10px; /* Space between button and spinner */
-            display: none; /* Hide spinner by default */
+            margin-top: 10px;
+            display: none;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -100,13 +100,11 @@
     </div>
     <script>
         document.getElementById('price-form').addEventListener('submit', function(event) {
-            document.getElementById('spinner').style.display = 'block'; // Show spinner
-            // Prevent the form from submitting immediately
+            document.getElementById('spinner').style.display = 'block';
             event.preventDefault();
-            // Simulate a delay to show spinner
             setTimeout(function() {
-                document.getElementById('price-form').submit(); // Submit the form after delay
-            }, 100); // Adjust delay as needed
+                document.getElementById('price-form').submit();
+            }, 100);
         });
     </script>
 </body>
