@@ -72,7 +72,6 @@ La aplicación estará disponible en `http://127.0.0.1:5000`
 - **Flask**: Framework web para Python.
 - **Matplotlib**: Librería para la creación de gráficos.
 - **BeautifulSoup**: Biblioteca para el análisis de HTML y extracción de datos.
-- **PIL (Pillow)**: Librería para el manejo de imágenes.
 - **Requests**: Biblioteca para hacer solicitudes HTTP.
 - **NumPy**: Biblioteca para el cálculo numérico en Python.
 

@@ -1,9 +1,7 @@
 from flask import Flask, request, redirect, url_for, render_template
-from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import matplotlib.ticker as ticker
 import matplotlib.pyplot as plt
 from bs4 import BeautifulSoup
-from PIL import Image
 import numpy as np
 import requests
 import datetime
@@ -49,7 +47,6 @@ def index():
 def get_prices(item, number_of_pages):
     """Fetch the prices of the given item from MercadoLibre."""
     prices_list = []
-    image_urls = []
 
     for i in range(number_of_pages):
         start_item = i * 50 + 1
@@ -62,15 +59,11 @@ def get_prices(item, number_of_pages):
             prices = soup.find_all("span", class_="andes-money-amount__fraction")
             prices_list.extend([int(re.sub(r"\D", "", price.text)) for price in prices])
 
-            images = soup.find_all(
-                "img", class_="poly-component__picture poly-component__picture--square"
-            )
-            image_urls.extend([image["src"] for image in images])
         except requests.exceptions.RequestException as e:
             app.logger.error(f"Error fetching prices: {e}")
             return None, None, None
 
-    return prices_list, url, image_urls
+    return prices_list, url
 
 
 def format_x(value, tick_number):
@@ -78,7 +71,7 @@ def format_x(value, tick_number):
     return f"{int(value):,}"
 
 
-def plot_prices(prices_list, item, url, image_urls):
+def plot_prices(prices_list, item, url):
     """Plot a histogram of the prices."""
     venta_dolar = get_exchange_rate()
     venta_dolar = float(venta_dolar.replace(" ARS", ""))
@@ -151,14 +144,6 @@ def plot_prices(prices_list, item, url, image_urls):
         ["Median", "Avg", "Max", "Min", "Std Dev", "25th percentile"], loc="upper right"
     )
 
-    if image_urls:
-        img = Image.open(io.BytesIO(requests.get(image_urls[0]).content))
-        ylim = plt.gca().get_ylim()
-        ytop = ylim[1] - 0.1 * (ylim[1] - ylim[0])
-        imagebox = OffsetImage(img, zoom=0.2)
-        ab = AnnotationBbox(imagebox, (max_price, ytop), frameon=False)
-        plt.gca().add_artist(ab)
-
     plt.grid(True)
     plt.tight_layout()
 
@@ -176,7 +161,7 @@ def plot_prices(prices_list, item, url, image_urls):
 def show_plot():
     item = request.args.get("item")
     number_of_pages = int(request.args.get("number_of_pages"))
-    prices_list, url, image_urls = get_prices(item, number_of_pages)
+    prices_list, url = get_prices(item, number_of_pages)
     if prices_list is None or url is None:
         error_message = "Failed to fetch prices. Please try searching fewer pages or check the item name."
         return render_template("error.html", error_message=error_message), 500
@@ -187,7 +172,7 @@ def show_plot():
     min_price = float(min(prices_list))
     current_date = datetime.date.today().strftime("%d/%m/%Y")
 
-    plot_base64 = plot_prices(prices_list, item, url, image_urls)
+    plot_base64 = plot_prices(prices_list, item, url)
     if plot_base64 is None:
         error_message = "Failed to generate plot. Please try again later."
         return render_template("error.html", error_message=error_message), 500
