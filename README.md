@@ -75,6 +75,10 @@ La aplicación estará disponible en `http://127.0.0.1:5000`
 - **Requests**: Biblioteca para hacer solicitudes HTTP.
 - **NumPy**: Biblioteca para el cálculo numérico en Python.
 
+## Diagrama de Flujo
+
+![Diagrama de Flujo](media/diagram.png)
+
 ## Contribuciones
 
 Este proyecto es de código abierto y las contribuciones son bienvenidas. 
