@@ -77,7 +77,7 @@ La aplicación estará disponible en `http://127.0.0.1:5000`
 
 ## Diagrama de Flujo
 
-![Diagrama de Flujo](media/diagram.png)
+![Diagrama de Flujo](media/diagrama.png)
 
 ## Contribuciones
 
