@@ -12,11 +12,6 @@
       "dest": "app.py"
     }
   ],
-  "functions": {
-    "app.py": {
-      "maxDuration": 60
-    }
-  },
   "env": {
     "MPLCONFIGDIR": "/tmp/matplotlib"
   }
