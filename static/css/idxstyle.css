@@ -103,5 +103,5 @@ button:hover {
 
 .warning-message::before {
     content: "⚠️";
-    margin-right: 10px; 
+    margin-right: 10px;
 }
