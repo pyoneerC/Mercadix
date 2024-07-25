@@ -13,6 +13,8 @@ Este proyecto es una aplicación web desarrollada en Flask que permite consultar
 > [!TIP]
 > Puedes ingresar cualquier artículo que desees en la barra de búsqueda!
 
+![Imagen en IPHONE](media/iphone.png)
+
 ## Funcionalidades
 
 - **Consulta de Precios**: Permite al usuario ingresar el nombre de un producto y el número de páginas para consultar en MercadoLibre.
