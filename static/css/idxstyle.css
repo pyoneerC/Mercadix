@@ -88,3 +88,21 @@ button:hover {
 	margin-top: 20px;
 	color: #777;
 }
+
+.warning-message {
+    color: #f6ff00;
+    background-color: rgba(255, 235, 235, 0.9);
+    border: 1px solid #515422;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-top: 10px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 0 10px rgb(61, 63, 30);
+}
+
+.warning-message::before {
+    content: "⚠️";
+    margin-right: 10px;
+}

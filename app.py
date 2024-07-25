@@ -30,13 +30,20 @@ def format_number(value):
         return value
 
 
-@functools.lru_cache(maxsize=1)
+# Use the same exchange rate for all the sessions, it isn't that volatile
+exchange_rate = None
+
+
 def get_exchange_rate():
     """Fetch the current exchange rate from the API."""
+    global exchange_rate
+    if exchange_rate is not None:
+        return exchange_rate
     try:
         response = requests.get(API_URL)
         response.raise_for_status()
-        return response.json().get("venta", None)
+        exchange_rate = response.json().get("venta", None)
+        return exchange_rate
     except requests.exceptions.RequestException as e:
         app.logger.error(f"Error fetching exchange rate: {e}")
         return None
@@ -47,9 +54,7 @@ def index():
     if request.method == "POST":
         item = request.form["item"]
         number_of_pages = int(request.form["number_of_pages"])
-        return redirect(
-            url_for("show_plot", item=item, number_of_pages=number_of_pages)
-        )
+        return redirect(url_for("show_plot", item=item, number_of_pages=number_of_pages))
     return render_template("index.html")
 
 
@@ -71,7 +76,7 @@ def get_prices(item, number_of_pages):
             prices_list.extend([int(re.sub(r"\D", "", price.text)) for price in prices])
         except requests.exceptions.RequestException as e:
             app.logger.error(f"Error fetching prices: {e}")
-            return None, None, None
+            return None, None
 
     prices_cache[cache_key] = (prices_list, url)
     return prices_list, url
@@ -85,10 +90,11 @@ def format_x(value, tick_number):
 def plot_prices(prices_list, item, url):
     """Plot a histogram of the prices."""
     venta_dolar = get_exchange_rate()
-    venta_dolar = float(venta_dolar.replace(" ARS", ""))
     if not venta_dolar:
         app.logger.error("Failed to get exchange rate.")
         return None
+
+    venta_dolar = float(venta_dolar.replace(" ARS", ""))
 
     plt.figure(figsize=(10, 5))
     plt.hist(prices_list, bins=20, color="lightblue", edgecolor="black")
@@ -139,20 +145,10 @@ def plot_prices(prices_list, item, url):
     plot_stat_line(avg_price, "purple", "Avg")
     plot_stat_line(max_price, "blue", "Max", linestyle="dashed")
     plot_stat_line(min_price, "blue", "Min", linestyle="dashed")
-    plot_stat_line(
-        avg_price + std_dev, "black", "Std Dev", linestyle="dotted", linewidth=3
-    )
-    plot_stat_line(
-        np.percentile(prices_list, 25),
-        "green",
-        "25th percentile",
-        linestyle="dashed",
-        linewidth=2,
-    )
+    plot_stat_line(avg_price + std_dev, "black", "Std Dev", linestyle="dotted", linewidth=3)
+    plot_stat_line(np.percentile(prices_list, 25), "green", "25th percentile", linestyle="dashed", linewidth=2)
 
-    plt.legend(
-        ["Median", "Avg", "Max", "Min", "Std Dev", "25th percentile"], loc="upper right"
-    )
+    plt.legend(["Median", "Avg", "Max", "Min", "Std Dev", "25th percentile"], loc="upper right")
 
     plt.grid(True)
     plt.tight_layout()
@@ -202,7 +198,7 @@ def show_plot():
 
 
 @app.errorhandler(500)
-def internal_server_error(error):
+def internal_server_error():
     return (
         render_template(
             "error.html",
