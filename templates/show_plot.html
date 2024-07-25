@@ -17,7 +17,7 @@
             <a href="data:image/png;base64,{{ plot_base64 }}" download="{{ item }}_price_histogram_MercadoLibre_{{ current_date }}_{{ number_of_pages }}_pages.png">
                 Download Image
             <a href="{{ url }}" target="_blank">View on Mercado Libre</a>
-         </div>
+            </div>
          <div class="stats">
              <p><strong>{{ item | upper }} prices in Mercado Libre:</strong></p>
             <p><strong>Average Price:</strong> {{ avg_price | format_number }} ARS</p>
