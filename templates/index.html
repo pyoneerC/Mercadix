@@ -1,32 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Mercado Libre Price Chart</title>
-      <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-      <link rel="stylesheet" href="{{ url_for('static', filename='css/idxstyle.css') }}">
-
-   </head>
-   <body>
-      <div class="container">
-         <h1>Mercado Libre Price Chart</h1>
-         <form id="price-form" action="/" method="post">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercado Libre Price Chart</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/idxstyle.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Mercado Libre Price Chart</h1>
+        <form id="price-form" action="/" method="post">
             <label for="item">Item:</label>
             <input type="text" id="item" name="item" required placeholder="Raqueta de tenis">
             <label for="number_of_pages">Number of Pages (1–15):</label>
             <input type="number" id="number_of_pages" name="number_of_pages" required min="1" max="15" value="1">
             <button type="submit" id="submit-button">Generate Plot</button>
             <div class="spinner" id="spinner"></div>
-         </form>
+        </form>
         <div class="warning-message">
             Warning: The more pages you request, the longer it will take to generate the plot. Each page takes approximately 3 seconds to index.
         </div>
-         <div class="footer">
+        <div class="footer">
             &copy; 2024 PyoneerC. Published under the MIT License.
             <a href="https://github.com/pyoneerC/mercado-libre-price-chart" target="_blank">View on GitHub</a>
-         </div>
-      </div>
-   <script src="{{ url_for('static', filename='js/index.js') }}"></script>
-   </body>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</body>
 </html>
