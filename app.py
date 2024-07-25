@@ -1,3 +1,4 @@
+import functools
 from flask import Flask, request, redirect, url_for, render_template
 import matplotlib.ticker as ticker
 import matplotlib.pyplot as plt
@@ -8,12 +9,18 @@ import datetime
 import re
 import io
 import base64
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+os.environ['MPLCONFIGDIR'] = '/tmp/matplotlib'
 
 app = Flask(__name__)
 API_URL = "https://fastapiproject-1-eziw.onrender.com/blue"
+prices_cache = {}
 
 
-# Custom filter to format numbers with commas
 @app.template_filter("format_number")
 def format_number(value):
     try:
@@ -22,6 +29,7 @@ def format_number(value):
         return value
 
 
+@functools.lru_cache(maxsize=1)
 def get_exchange_rate():
     """Fetch the current exchange rate from the API."""
     try:
@@ -46,8 +54,11 @@ def index():
 
 def get_prices(item, number_of_pages):
     """Fetch the prices of the given item from MercadoLibre."""
-    prices_list = []
+    cache_key = (item, number_of_pages)
+    if cache_key in prices_cache:
+        return prices_cache[cache_key]
 
+    prices_list = []
     for i in range(number_of_pages):
         start_item = i * 50 + 1
         url = f"https://listado.mercadolibre.com.ar/{item}_Desde_{start_item}_NoIndex_True"
@@ -55,14 +66,13 @@ def get_prices(item, number_of_pages):
             response = requests.get(url)
             response.raise_for_status()
             soup = BeautifulSoup(response.content, "html.parser")
-
             prices = soup.find_all("span", class_="andes-money-amount__fraction")
             prices_list.extend([int(re.sub(r"\D", "", price.text)) for price in prices])
-
         except requests.exceptions.RequestException as e:
             app.logger.error(f"Error fetching prices: {e}")
             return None, None, None
 
+    prices_cache[cache_key] = (prices_list, url)
     return prices_list, url
 
 
@@ -81,7 +91,6 @@ def plot_prices(prices_list, item, url):
 
     plt.figure(figsize=(10, 5))
     plt.hist(prices_list, bins=20, color="lightblue", edgecolor="black")
-
     plt.ticklabel_format(style="plain", axis="x")
     formatter = ticker.FuncFormatter(format_x)
     plt.gca().xaxis.set_major_formatter(formatter)
