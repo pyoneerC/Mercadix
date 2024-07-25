@@ -14,6 +14,7 @@ import os
 
 load_dotenv()
 
+# Set the MPLCONFIGDIR environment variable
 os.environ['MPLCONFIGDIR'] = '/tmp/matplotlib'
 
 app = Flask(__name__)
