@@ -105,3 +105,16 @@ button:hover {
     content: "⚠️";
     margin-right: 10px;
 }
+
+.explanation {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f9;
+    border-left: 5px solid #007bff;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 20px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
