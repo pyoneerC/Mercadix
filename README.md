@@ -58,7 +58,7 @@ Finalmente, ejecuta la aplicación con el siguiente comando:
 La aplicación estará disponible en `http://127.0.0.1:5000`
 
 > [!WARNING]
-> Cuidado con ingresar un número muy alto de páginas, ya que puede llevar varios segundos en completarse.
+> Cuidado con ingresar un número muy alto de páginas, ya que la operación puede tardar varios segundos en completarse.
 
 
 > [!CAUTION]
