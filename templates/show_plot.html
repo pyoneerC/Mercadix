@@ -20,10 +20,10 @@
             </div>
          <div class="stats">
              <p><strong>{{ item | upper }} prices in Mercado Libre:</strong></p>
-            <p><strong>Average Price:</strong> {{ avg_price | format_number }} ARS</p>
-            <p><strong>Median Price:</strong> {{ median_price | format_number }} ARS</p>
-            <p><strong>Maximum Price:</strong> {{ max_price | format_number }} ARS</p>
-            <p><strong>Minimum Price:</strong> {{ min_price | format_number }} ARS</p>
+            <p><strong>Average Price:</strong> {{ avg_price | format_number }} ARS ({{ avg_price_usd | format_number }} USD)</p>
+            <p><strong>Median Price:</strong> {{ median_price | format_number }} ARS ({{ median_price_usd | format_number }} USD)</p>
+            <p><strong>Maximum Price:</strong> {{ max_price | format_number }} ARS ({{ max_price_usd | format_number }} USD)</p>
+            <p><strong>Minimum Price:</strong> {{ min_price | format_number }} ARS ({{ min_price_usd | format_number }} USD)</p>
          </div>
          <div class="footer">
             &copy; 2024 PyoneerC.

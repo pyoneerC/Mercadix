@@ -194,8 +194,11 @@ def show_plot():
         item=item,
         number_of_pages=number_of_pages,
         current_date=current_date,
-    )
-
+        avg_price_usd=int(avg_price / float(get_exchange_rate().replace(" ARS", ""))),
+        median_price_usd=int(median_price / float(get_exchange_rate().replace(" ARS", ""))),
+        max_price_usd=int(max_price / float(get_exchange_rate().replace(" ARS", ""))),
+        min_price_usd=int(min_price / float(get_exchange_rate().replace(" ARS", "")),
+    ))
 
 @app.errorhandler(500)
 def internal_server_error():
