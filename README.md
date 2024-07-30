@@ -1,5 +1,9 @@
 # MercadoLibre Price Chart
 
+![GitHub repo size](https://img.shields.io/github/repo-size/pyoneerC/mercado-libre-price-chart)
+![Website](https://img.shields.io/website?url=https%3A%2F%2Fmercado-libre-price-chart.vercel.app)
+![GitHub License](https://img.shields.io/github/license/pyoneerc/mercado-libre-price-chart)
+
 ## Descripción
 
 Este proyecto es una aplicación web desarrollada en Flask que permite consultar precios de productos en MercadoLibre y visualizarlos en un histograma. Utiliza web scraping para obtener los precios, la API [monedas-api](https://github.com/pyoneerC/monedas-api) (desarrollada por mí) para el tipo de cambio actualizado a dólares, y Matplotlib para generar gráficos claros y concisos que representan eficazmente la variabilidad de los precios.

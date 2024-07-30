@@ -198,7 +198,8 @@ def show_plot():
         median_price_usd=int(median_price / float(get_exchange_rate().replace(" ARS", ""))),
         max_price_usd=int(max_price / float(get_exchange_rate().replace(" ARS", ""))),
         min_price_usd=int(min_price / float(get_exchange_rate().replace(" ARS", "")),
-    ))
+                          ))
+
 
 @app.errorhandler(500)
 def internal_server_error():
