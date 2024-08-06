@@ -65,5 +65,6 @@
   "related_applications": [],
   "offline_capable": true,
   "update_via_cache": "all",
-  "scope_extensions": []
+  "scope_extensions": [],
+  "iarc_rating_id": ""
 }
