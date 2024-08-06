@@ -65,9 +65,10 @@ def serve_manifest():
 def serve_sw():
     return send_file('sw.js', mimetype='application/javascript')
 
+
 @app.route('/.well-known/assetlinks.json')
 def serve_assetlinks():
-    return send_file('.well-known/assetlinks.json', mimetype='application/json')
+    return send_file('assetlinks.json', mimetype='application/json')
 
 
 def get_prices(item, number_of_pages):
