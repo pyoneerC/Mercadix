@@ -54,8 +54,12 @@
             <input type="text" id="item" name="item" required placeholder="Raqueta de tenis">
             <label for="number_of_pages">Número de páginas (1-10):</label>
             <input type="number" id="number_of_pages" name="number_of_pages" required min="1" max="10" value="1">
-            <button type="submit" id="submit-button">Generate Plot</button>
+            <button type="submit" id="submit-button">Generar Histograma</button>
         </form>
+
+        <div class="progress-container" id="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
 
         <div class="explanation">
             <p>
@@ -69,10 +73,6 @@
         </div>
         <div class="warning-message">
             Advertencia: Cuantas más páginas solicites, más tiempo tardarás en generar el gráfico. Cada página tarda aproximadamente 2 segundos en indexarse.
-        </div>
-
-        <div class="progress-container" id="progress-container">
-            <div class="progress-bar" id="progress-bar"></div>
         </div>
 
         <div class="footer">
