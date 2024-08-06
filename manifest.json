@@ -6,6 +6,7 @@
   "description": "Mercadix is a price comparison app that helps users find the best deals on MercadoLibre.",
   "id": "com.mercadix",
   "display": "standalone",
+  "dir": "ltr",
   "theme_color": "#317EFB",
   "background_color": "#317EFB",
   "orientation": "portrait-primary",
@@ -59,5 +60,10 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "offline_capable": true,
+  "update_via_cache": "all",
+  "scope_extensions": []
 }
