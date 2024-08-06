@@ -11,6 +11,9 @@
   "background_color": "#317EFB",
   "orientation": "portrait-primary",
   "lang": "en",
+  "categories": ["shopping", "finance"],
+  "launch_handler": {
+    "client_mode": "auto",
   "icons": [
     {
       "src": "/static/icons/android-icon-36x36.png",
@@ -49,7 +52,7 @@
       "purpose": "any maskable"
     },
     {
-      "src": "/static/icons/icon-310x310.png",
+      "src": "/static/icons/ms-icon-310x310.png",
       "sizes": "310x310",
       "type": "image/png",
       "purpose": "any maskable"
@@ -66,5 +69,5 @@
   "offline_capable": true,
   "update_via_cache": "all",
   "scope_extensions": [],
-  "iarc_rating_id": ""
+  "iarc_rating_id": "none"
 }
