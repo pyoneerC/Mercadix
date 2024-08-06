@@ -57,6 +57,13 @@ def index():
         return redirect(url_for("show_plot", item=item, number_of_pages=number_of_pages))
     return render_template("index.html")
 
+@app.route('/manifest.json')
+def serve_manifest():
+    return send_file('manifest.json', mimetype='application/manifest+json')
+
+@app.route('/sw.js')
+def serve_sw():
+    return send_file('sw.js', mimetype='application/javascript')
 
 def get_prices(item, number_of_pages):
     """Fetch the prices of the given item from MercadoLibre."""
