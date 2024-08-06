@@ -11,63 +11,68 @@
   "background_color": "#317EFB",
   "orientation": "portrait-primary",
   "lang": "es",
-  "categories": ["shopping", "finance"],
+  "categories": [
+    "shopping",
+    "finance"
+  ],
   "launch_handler": {
     "client_mode": "auto",
-  "icons": [
-    {
-      "src": "/static/icons/android-icon-36x36.png",
-      "sizes": "48x48",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/static/icons/android-icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/static/icons/android-icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/static/icons/android-icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/static/icons/android-icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/static/icons/apple-icon-180x180.png",
-      "sizes": "180x180",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/static/icons/ms-icon-310x310.png",
-      "sizes": "310x310",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/static/icons/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
-  "prefer_related_applications": false,
-  "related_applications": [],
-  "offline_capable": true,
-  "update_via_cache": "all",
-  "scope_extensions": [],
-  "iarc_rating_id": "none"
+    "icons": [
+      {
+        "src": "/static/icons/android-icon-36x36.png",
+        "sizes": "48x48",
+        "type": "image/png",
+        "purpose": "any"
+      },
+      {
+        "src": "/static/icons/android-icon-72x72.png",
+        "sizes": "72x72",
+        "type": "image/png",
+        "purpose": "any"
+      },
+      {
+        "src": "/static/icons/android-icon-96x96.png",
+        "sizes": "96x96",
+        "type": "image/png",
+        "purpose": "any"
+      },
+      {
+        "src": "/static/icons/android-icon-144x144.png",
+        "sizes": "144x144",
+        "type": "image/png",
+        "purpose": "any"
+      },
+      {
+        "src": "/static/icons/android-icon-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "any"
+      },
+      {
+        "src": "/static/icons/apple-icon-180x180.png",
+        "sizes": "180x180",
+        "type": "image/png",
+        "purpose": "any"
+      },
+      {
+        "src": "/static/icons/ms-icon-310x310.png",
+        "sizes": "310x310",
+        "type": "image/png",
+        "purpose": "any"
+      },
+      {
+        "src": "/static/icons/icon-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any"
+      }
+    ],
+    "prefer_related_applications": false,
+    "related_applications": [],
+    "offline_capable": true,
+    "update_via_cache": "all",
+    "scope_extensions": [],
+    "iarc_rating_id": "none"
+  }
 }
+
