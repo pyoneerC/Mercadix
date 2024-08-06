@@ -3,11 +3,12 @@
   "short_name": "Mercadix",
   "start_url": "/",
   "scope": "/",
+  "description": "Mercadix is a price comparison app that helps users find the best deals on MercadoLibre.",
+  "id": "com.mercadix",
   "display": "standalone",
   "theme_color": "#317EFB",
   "background_color": "#317EFB",
   "orientation": "portrait-primary",
-  "description": "Mercadix is a price comparison app that helps users find the best deals on MercadoLibre.",
   "lang": "en",
   "icons": [
     {
@@ -49,6 +50,12 @@
     {
       "src": "/static/icons/icon-310x310.png",
       "sizes": "310x310",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/js/favicon.ico",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     }

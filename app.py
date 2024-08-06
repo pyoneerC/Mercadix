@@ -1,20 +1,19 @@
-import functools
-from flask import Flask, request, redirect, url_for, render_template
-import matplotlib.ticker as ticker
+import base64
+import datetime
+import io
+import os
+import re
+
 import matplotlib.pyplot as plt
-from bs4 import BeautifulSoup
+import matplotlib.ticker as ticker
 import numpy as np
 import requests
-import datetime
-import re
-import io
-import base64
+from bs4 import BeautifulSoup
 from dotenv import load_dotenv
-import os
+from flask import Flask, request, redirect, url_for, render_template, send_file
 
 load_dotenv()
 
-# Set the MPLCONFIGDIR environment variable
 os.environ['MPLCONFIGDIR'] = '/tmp/matplotlib'
 
 app = Flask(__name__)
@@ -30,7 +29,6 @@ def format_number(value):
         return value
 
 
-# Use the same exchange rate for all the sessions, it isn't that volatile
 exchange_rate = None
 
 
@@ -57,13 +55,16 @@ def index():
         return redirect(url_for("show_plot", item=item, number_of_pages=number_of_pages))
     return render_template("index.html")
 
+
 @app.route('/manifest.json')
 def serve_manifest():
-    return send_file('manifest.json', mimetype='application/manifest+json')
+    return send_file('manifest.json', mimetype='application/json')
+
 
 @app.route('/sw.js')
 def serve_sw():
     return send_file('sw.js', mimetype='application/javascript')
+
 
 def get_prices(item, number_of_pages):
     """Fetch the prices of the given item from MercadoLibre."""
