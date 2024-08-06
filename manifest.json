@@ -10,7 +10,7 @@
   "theme_color": "#317EFB",
   "background_color": "#317EFB",
   "orientation": "portrait-primary",
-  "lang": "en",
+  "lang": "es",
   "categories": ["shopping", "finance"],
   "launch_handler": {
     "client_mode": "auto",
