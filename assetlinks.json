@@ -1,10 +1,8 @@
-[
-  {
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "xyz.appmaker.wxeyqi",
-      "sha256_cert_fingerprints": ["A0:CF:81:33:E6:AF:C1:6D:11:ED:79:2E:6D:5B:25:07:BE:A9:D1:3B:48:42:C8:F3:6C:5A:B5:F9:7A:5D:D5:98"]
-    }
-  }
-]
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "store.maxcomperatore.twa",
+        "sha256_cert_fingerprints": ["81:B8:1A:19:95:A1:03:9E:4C:66:86:4C:EC:BB:59:06:40:30:71:10:83:31:1B:D4:71:3C:FB:B1:41:29:0F:7B"]
+      }
+    }]
