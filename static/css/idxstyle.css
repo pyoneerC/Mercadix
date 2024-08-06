@@ -148,7 +148,7 @@ body {
 }
 
 .warning-message {
-	color: #232323;
+	color: rgba(255, 0, 0, 0.73);
 	background-color: rgba(255, 235, 235, 0.9);
 	border: 1px solid #515422;
 	border-radius: 5px;
