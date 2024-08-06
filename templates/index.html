@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mercado Libre Price Chart</title>
+    <title>Mercadix</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/idxstyle.css') }}">
 </head>
@@ -48,23 +48,22 @@
 </head>
 <body>
     <div class="container">
-        <h1>Mercado Libre Price Chart</h1>
+        <h1>Mercadix</h1>
         <form id="price-form" action="/" method="post">
-            <label for="item">Item:</label>
+            <label for="item">Ítem:</label>
             <input type="text" id="item" name="item" required placeholder="Raqueta de tenis">
-            <label for="number_of_pages">Number of Pages (1–15):</label>
-            <input type="number" id="number_of_pages" name="number_of_pages" required min="1" max="15" value="1">
+            <label for="number_of_pages">Número de páginas (1-10):</label>
+            <input type="number" id="number_of_pages" name="number_of_pages" required min="1" max="10" value="1">
             <button type="submit" id="submit-button">Generate Plot</button>
         </form>
 
         <div class="explanation">
             <p>
-                This web app generates a price chart for any given item on Mercado Libre.
-                The chart shows the price distribution of the item on the first <strong>n</strong> pages of the search results.
+                Descubre los mejores precios para cualquier artículo en Mercado Libre con Mercadix. Genera gráficos detallados de distribución de precios en tiempo real, analizando hasta las primeras 10 páginas de resultados de búsqueda. Mantente informado con datos actualizados al instante y toma decisiones de compra más inteligentes.
             </p>
         </div>
         <div class="warning-message">
-            Warning: The more pages you request, the longer it will take to generate the plot. Each page takes approximately 2 seconds to index.
+            Advertencia: Cuantas más páginas solicites, más tiempo tardarás en generar el gráfico. Cada página tarda aproximadamente 2 segundos en indexarse.
         </div>
 
         <div class="progress-container" id="progress-container">
@@ -73,7 +72,7 @@
 
         <div class="footer">
             &copy; 2024 PyoneerC.
-            <a href="https://github.com/pyoneerC/mercado-libre-price-chart" target="_blank">View on GitHub</a>
+            <a href="https://github.com/pyoneerC/Mercadix" target="_blank">View on GitHub</a>
         </div>
     </div>
 

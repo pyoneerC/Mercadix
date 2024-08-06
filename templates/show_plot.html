@@ -10,24 +10,24 @@
    </head>
    <body>
       <div class="container">
-         <h1>Price Histogram</h1>
+         <h1>Histograma de Precios</h1>
          <img src="data:image/png;base64,{{ plot_base64 }}" alt="Price Histogram">
          <div class="button-group">
-            <a href="{{ url_for('index') }}">Go Back</a>
+            <a href="{{ url_for('index') }}">Volver</a>
             <a href="data:image/png;base64,{{ plot_base64 }}" download="{{ item }}_price_histogram_MercadoLibre_{{ current_date }}_{{ number_of_pages }}_pages.png">
-                Download Image
-            <a href="{{ url }}" target="_blank">View on Mercado Libre</a>
+                Descargar gráfico
+            <a href="{{ url }}" target="_blank">Ver en Mercado Libre</a>
             </div>
          <div class="stats">
-             <p><strong>{{ item | upper }} prices in Mercado Libre:</strong></p>
-            <p><strong>Average Price:</strong> {{ avg_price | format_number }} ARS ({{ avg_price_usd | format_number }} USD)</p>
-            <p><strong>Median Price:</strong> {{ median_price | format_number }} ARS ({{ median_price_usd | format_number }} USD)</p>
-            <p><strong>Maximum Price:</strong> {{ max_price | format_number }} ARS ({{ max_price_usd | format_number }} USD)</p>
-            <p><strong>Minimum Price:</strong> {{ min_price | format_number }} ARS ({{ min_price_usd | format_number }} USD)</p>
+             <p><strong>Precios de {{ item | upper }} en Mercado Libre</strong></p>
+            <p><strong>Mediana:</strong> {{ median_price | format_number }} ARS ({{ median_price_usd | format_number }} USD)</p>
+             <p><strong>Precio Promedio:</strong> {{ avg_price | format_number }} ARS ({{ avg_price_usd | format_number }} USD)</p>
+            <p><strong>Precio Máximo:</strong> {{ max_price | format_number }} ARS ({{ max_price_usd | format_number }} USD)</p>
+            <p><strong>Precio Mínimo:</strong> {{ min_price | format_number }} ARS ({{ min_price_usd | format_number }} USD)</p>
          </div>
          <div class="footer">
             &copy; 2024 PyoneerC.
-            <a href="https://github.com/pyoneerC/mercado-libre-price-chart" target="_blank">View on GitHub</a>
+            <a href="https://github.com/pyoneerC/mercado-libre-price-chart" target="_blank">Ver en GitHub</a>
          </div>
       </div>
    </body>
