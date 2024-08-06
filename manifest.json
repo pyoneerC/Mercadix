@@ -70,5 +70,22 @@
   "offline_capable": true,
   "update_via_cache": "all",
   "scope_extensions": [],
-  "iarc_rating_id": "none"
+  "iarc_rating_id": "none",
+  "screenshots": [
+    {
+      "src": "/static/screenshots/1.png",
+      "sizes": "391x850",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/screenshots/2.png",
+      "sizes": "411x893",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/screenshots/3.png",
+      "sizes": "377x819",
+      "type": "image/png"
+    }
+  ]
 }
