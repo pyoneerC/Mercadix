@@ -54,7 +54,7 @@
       "purpose": "any maskable"
     },
     {
-      "src": "/static/js/favicon.ico",
+      "src": "/static/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
