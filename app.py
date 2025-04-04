@@ -100,32 +100,43 @@ def format_x(value, tick_number):
     return f"{int(value):,}"
 
 
-def plot_prices(prices_list, item, url):
-    """Plot a histogram of the prices."""
+def plot_prices(prices_list, item, url, filter_outliers=True, threshold=3):
     venta_dolar = get_exchange_rate()
     if not venta_dolar:
         app.logger.error("Failed to get exchange rate.")
         return None
-
     venta_dolar = float(venta_dolar.replace(" ARS", ""))
 
+    # Compute statistics on the full dataset
+    std_dev = np.std(prices_list)
+    avg_price = np.mean(prices_list)
+    median_price = np.median(prices_list)
+    max_price = max(prices_list)
+    min_price = min(prices_list)
+
+    # Filter out outliers if the option is enabled
+    if filter_outliers:
+        lower_bound = avg_price - threshold * std_dev
+        upper_bound = avg_price + threshold * std_dev
+        non_outliers = [p for p in prices_list if lower_bound <= p <= upper_bound]
+        outliers = [p for p in prices_list if p < lower_bound or p > upper_bound]
+    else:
+        non_outliers = prices_list
+        outliers = []
+
     plt.figure(figsize=(10, 5))
-    plt.hist(prices_list, bins=20, color="lightblue", edgecolor="black")
+    plt.hist(non_outliers, bins=20, color="lightblue", edgecolor="black")
     plt.ticklabel_format(style="plain", axis="x")
     formatter = ticker.FuncFormatter(format_x)
     plt.gca().xaxis.set_major_formatter(formatter)
 
     y_position = plt.gca().get_ylim()[1] * 0.05
-    median = np.median(prices_list)
+    # Adjust offset for label text depending on median value
     x_pos_offset = (
-        500
-        if median <= 10000
-        else 1000
-        if median <= 20000
-        else 2000
-        if median <= 50000
-        else 3500
-        if median <= 70000
+        500 if median_price <= 10000
+        else 1000 if median_price <= 20000
+        else 2000 if median_price <= 50000
+        else 3500 if median_price <= 70000
         else 10000
     )
 
@@ -134,15 +145,9 @@ def plot_prices(prices_list, item, url):
     current_date = datetime.date.today().strftime("%d/%m/%Y")
     plt.title(
         f'Histogram of {item.replace("-", " ").upper()} prices in MercadoLibre Argentina ({current_date})\n'
-        f"Number of items indexed: {len(prices_list)} "
-        f'({request.args.get("number_of_pages")} pages)\nURL: {url}\n'
+        f"Number of items indexed: {len(prices_list)} ({request.args.get('number_of_pages')} pages)\n"
+        f"URL: {url}"
     )
-
-    std_dev = np.std(prices_list)
-    avg_price = np.mean(prices_list)
-    median_price = np.median(prices_list)
-    max_price = max(prices_list)
-    min_price = min(prices_list)
 
     def plot_stat_line(stat_value, color, label, linestyle="solid", linewidth=1):
         plt.axvline(stat_value, color=color, linestyle=linestyle, linewidth=linewidth)
@@ -162,17 +167,19 @@ def plot_prices(prices_list, item, url):
     plot_stat_line(np.percentile(prices_list, 25), "green", "25th percentile", linestyle="dashed", linewidth=2)
 
     plt.legend(["Median", "Avg", "Max", "Min", "Std Dev", "25th percentile"], loc="upper right")
-
     plt.grid(True)
-    plt.tight_layout()
 
+    # If outliers were detected, annotate the chart with their values.
+    if outliers:
+        outlier_text = "Outliers: " + ", ".join([f"{p:,}" for p in sorted(outliers)])
+        plt.figtext(0.99, 0.01, outlier_text, horizontalalignment='right', fontsize=8, color='red')
+
+    plt.tight_layout()
     buffer = io.BytesIO()
     plt.savefig(buffer, format="png")
     plt.close()
     buffer.seek(0)
-
     plot_base64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
-
     return plot_base64
 
 
