@@ -49,6 +49,31 @@
 <meta name="theme-color" content="#ffffff">
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+<div id="vanta-bg" class="fixed inset-0 -z-10"></div>
+
+<!-- Vanta.js + Three.js WAVES background -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+<script>
+    VANTA.WAVES({
+        el: "#vanta-bg",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.00,
+        scaleMobile: 1.00,
+        color: 0x3b82f6, // Azul Tailwind
+        shininess: 50,
+        waveHeight: 20,
+        waveSpeed: 0.6,
+        zoom: 0.95
+    });
+</script>
+
+
 <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
     <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Mercadix</h1>
     <form id="price-form" action="/" method="post" class="space-y-4">
