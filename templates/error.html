@@ -1,23 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Error - Algo salió mal</title>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-      <link rel="stylesheet" href="{{ url_for('static', filename='css/errorstyle.css') }}">
-      <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-   </head>
-   <body>
-      <div class="container">
-         <div class="icon">
-            <i class="fas fa-exclamation-triangle"></i>
-         </div>
-         <h1>Oops! Ocurrío un error</h1>
-         <p>{{ error_message }}</p>
-         <div class="button-group">
-            <a href="{{ url_for('index') }}">Volver</a>
-         </div>
-      </div>
-   </body>
+<head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>Error - Algo salió mal</title>
+   <!-- Font Awesome for icons -->
+   <link
+           rel="stylesheet"
+           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+   />
+   <!-- Tailwind CSS CDN -->
+   <script src="https://cdn.tailwindcss.com"></script>
+   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+</head>
+<body class="bg-red-100 flex items-center justify-center min-h-screen">
+<div class="bg-white p-8 rounded-lg shadow-lg text-center max-w-md w-full">
+   <div class="text-red-700 mb-4">
+      <i class="fas fa-exclamation-triangle text-5xl"></i>
+   </div>
+   <h1 class="text-3xl font-bold text-red-700 mb-2">Oops! Ocurrió un error</h1>
+   <p class="text-red-700 mb-6">{{ error_message }}</p>
+   <div>
+      <a
+              href="{{ url_for('index') }}"
+              class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-200"
+      >
+         Volver
+      </a>
+   </div>
+</div>
+</body>
 </html>

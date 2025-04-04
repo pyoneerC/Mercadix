@@ -1,34 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Price Histogram</title>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-      <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-      <link rel="stylesheet" href="{{ url_for('static', filename='css/showstyle.css') }}">
-   </head>
-   <body>
-      <div class="container">
-         <h1>Histograma de Precios</h1>
-         <img src="data:image/png;base64,{{ plot_base64 }}" alt="Price Histogram">
-         <div class="button-group">
-            <a href="{{ url_for('index') }}">Volver</a>
-            <a href="data:image/png;base64,{{ plot_base64 }}" download="{{ item }}_price_histogram_MercadoLibre_{{ current_date }}_{{ number_of_pages }}_pages.png">
-                Descargar gráfico
-            <a href="{{ url }}" target="_blank">Ver en Mercado Libre</a>
-            </div>
-         <div class="stats">
-             <p><strong>Precios de {{ item | upper }} en Mercado Libre</strong></p>
-            <p><strong>Mediana:</strong> {{ median_price | format_number }} ARS ({{ median_price_usd | format_number }} USD)</p>
-             <p><strong>Precio Promedio:</strong> {{ avg_price | format_number }} ARS ({{ avg_price_usd | format_number }} USD)</p>
-            <p><strong>Precio Máximo:</strong> {{ max_price | format_number }} ARS ({{ max_price_usd | format_number }} USD)</p>
-            <p><strong>Precio Mínimo:</strong> {{ min_price | format_number }} ARS ({{ min_price_usd | format_number }} USD)</p>
-         </div>
-         <div class="footer">
-            &copy; 2024 PyoneerC. No afiliado a Mercado Libre.
-            <a href="https://github.com/pyoneerC/mercado-libre-price-chart" target="_blank">Ver en GitHub</a>
-         </div>
-      </div>
-   </body>
+<head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>Price Histogram</title>
+   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+   <link
+           rel="stylesheet"
+           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+   />
+   <!-- Tailwind CSS -->
+   <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+<div class="bg-white p-8 rounded-lg shadow-lg max-w-3xl w-full">
+   <h1 class="text-3xl font-bold text-blue-600 text-center mb-6">Histograma de Precios</h1>
+   <div class="flex justify-center">
+      <img
+              src="data:image/png;base64,{{ plot_base64 }}"
+              alt="Price Histogram"
+              class="rounded-lg shadow-md hover:scale-105 transition-transform duration-300 max-w-full h-auto"
+      />
+   </div>
+   <div class="flex flex-wrap justify-center mt-6 gap-4">
+      <a
+              href="{{ url_for('index') }}"
+              class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
+      >
+         Volver
+      </a>
+      <a
+              href="data:image/png;base64,{{ plot_base64 }}"
+              download="{{ item }}_price_histogram_MercadoLibre_{{ current_date }}_{{ number_of_pages }}_pages.png"
+              class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition duration-300"
+      >
+         Descargar gráfico
+      </a>
+      <a
+              href="{{ url }}"
+              target="_blank"
+              class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700 transition duration-300"
+      >
+         Ver en Mercado Libre
+      </a>
+   </div>
+   <div class="bg-white mt-6 p-6 rounded-lg shadow-lg flex flex-col items-center">
+      <p class="text-xl font-bold text-blue-600 uppercase mb-4">
+         Precios de {{ item | upper }} en Mercado Libre
+      </p>
+      <p class="text-lg">
+         <strong class="text-blue-600">Mediana:</strong> {{ median_price | format_number }} ARS
+         ({{ median_price_usd | format_number }} USD)
+      </p>
+      <p class="text-lg">
+         <strong class="text-blue-600">Precio Promedio:</strong> {{ avg_price | format_number }} ARS
+         ({{ avg_price_usd | format_number }} USD)
+      </p>
+      <p class="text-lg">
+         <strong class="text-blue-600">Precio Máximo:</strong> {{ max_price | format_number }} ARS
+         ({{ max_price_usd | format_number }} USD)
+      </p>
+      <p class="text-lg">
+         <strong class="text-blue-600">Precio Mínimo:</strong> {{ min_price | format_number }} ARS
+         ({{ min_price_usd | format_number }} USD)
+      </p>
+   </div>
+   <div class="text-center mt-6 text-gray-500">
+      &copy; 2024 PyoneerC. No afiliado a Mercado Libre.
+      <a
+              href="https://github.com/pyoneerC/mercado-libre-price-chart"
+              target="_blank"
+              class="text-blue-600 hover:underline"
+      >
+         Ver en GitHub
+      </a>
+   </div>
+</div>
+</body>
 </html>
