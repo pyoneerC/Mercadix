@@ -3,7 +3,6 @@ import datetime
 import io
 import os
 import re
-import seaborn as sns
 
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
@@ -111,8 +110,7 @@ def plot_prices(prices_list, item, url):
     venta_dolar = float(venta_dolar.replace(" ARS", ""))
 
     plt.figure(figsize=(10, 5))
-    sns.set_style("whitegrid")
-    sns.histplot(prices_list, bins=20, kde=True, color="skyblue", edgecolor="black")
+    plt.hist(prices_list, bins=20, color="lightblue", edgecolor="black")
     plt.ticklabel_format(style="plain", axis="x")
     formatter = ticker.FuncFormatter(format_x)
     plt.gca().xaxis.set_major_formatter(formatter)
