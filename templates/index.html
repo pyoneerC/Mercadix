@@ -106,19 +106,27 @@
         </p>
     </div>
 
-    <!-- Itch.io Embed -->
-    <div class="mt-8 flex justify-center">
-        <iframe frameborder="0" src="https://itch.io/embed/2883734?border_width=3" width="500" height="171"
-                class="w-full max-w-sm">
-            <a href="https://pyoneerc1.itch.io/mercadix">Mercadix by pyoneerC1</a>
-        </iframe>
-    </div>
-
     <!-- Footer -->
-    <div class="mt-8 text-center text-gray-500 text-sm">
-        &copy; 2024 PyoneerC. No afiliado a Mercado Libre.
-        <a href="https://github.com/pyoneerC/Mercadix" target="_blank" class="text-blue-600 hover:underline">Ver en GitHub</a>
-    </div>
+    <footer class="mt-10 border-t border-gray-200 pt-6 text-sm text-gray-600">
+        <div class="flex flex-col items-center gap-2 text-center">
+            <p>&copy; 2024 <i>PyoneerC</i> — No afiliado a Mercado Libre.</p>
+            <div class="flex flex-wrap justify-center gap-3">
+                <a href="https://github.com/pyoneerC/Mercadix" target="_blank" class="text-blue-600 hover:underline">
+                    GitHub
+                </a>
+                <a href="https://pyoneerc1.itch.io/mercadix" target="_blank" class="text-blue-600 hover:underline">
+                    Android App
+                </a>
+                <a href="https://cafecito.app/maxcomperatore" target="_blank" class="text-blue-600 hover:underline">
+                    Cafecito
+                </a>
+                <a href="https://maxcomperatore.com" target="_blank" class="text-blue-600 hover:underline">
+                    maxcomperatore.com
+                </a>
+            </div>
+        </div>
+    </footer>
+
 </div>
 
 <script src="{{ url_for('static', filename='js/index.js') }}"></script>
