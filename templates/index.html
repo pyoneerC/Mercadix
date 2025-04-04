@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Mercadix</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="theme-color" content="#317EFB" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/idxstyle.css') }}">
 </head>
 <head>
@@ -46,36 +48,55 @@
 <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
 <meta name="theme-color" content="#ffffff">
 </head>
-<body>
-    <div class="container">
-        <h1>Mercadix</h1>
-        <form id="price-form" action="/" method="post">
-            <label for="item">Ítem:</label>
-            <input type="text" id="item" name="item" required placeholder="Raqueta de tenis">
-            <label for="number_of_pages">Número de páginas (1-10):</label>
-            <input type="number" id="number_of_pages" name="number_of_pages" required min="1" max="10" value="1">
-            <button type="submit" id="submit-button">Generar Histograma</button>
-        </form>
-
-        <div class="progress-container" id="progress-container">
-            <div class="progress-bar" id="progress-bar"></div>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Mercadix</h1>
+    <form id="price-form" action="/" method="post" class="space-y-4">
+        <div>
+            <label for="item" class="block text-gray-700 font-medium mb-1">Ítem:</label>
+            <input type="text" id="item" name="item" required placeholder="Raqueta de tenis"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
-
-        <div class="explanation">
-            <p>
-                Descubre los mejores precios para cualquier artículo en Mercado Libre con Mercadix. Genera un histograma de distribución de precios en tiempo real. Mantente informado con datos actualizados al instante y toma decisiones de compra más inteligentes.
-            </p>
+        <div>
+            <label for="number_of_pages" class="block text-gray-700 font-medium mb-1">Número de páginas (1-10):</label>
+            <input type="number" id="number_of_pages" name="number_of_pages" required min="1" max="10" value="1"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
+        <button type="submit" id="submit-button"
+                class="w-full bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 transition duration-200">
+            Generar Histograma
+        </button>
+    </form>
 
-        <iframe frameborder="0" src="https://itch.io/embed/2883734?border_width=3" width="500" height="171"><a href="https://pyoneerc1.itch.io/mercadix">Mercadix by pyoneerC1</a></iframe>
-
-        <div class="footer">
-            &copy; 2024 PyoneerC. No afiliado a Mercado Libre.
-            <a href="https://github.com/pyoneerC/Mercadix" target="_blank">Ver en GitHub</a>
-        </div>
+    <!-- Progress Bar -->
+    <div id="progress-container" class="w-full bg-gray-200 rounded-full h-4 mt-6 overflow-hidden">
+        <div id="progress-bar" class="h-full bg-blue-600 w-0 transition-all duration-300"></div>
     </div>
 
-    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/progressbar.js') }}"></script>
+    <!-- Explanation -->
+    <div class="mt-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-md">
+        <p class="text-gray-700 text-center">
+            Descubre los mejores precios para cualquier artículo en Mercado Libre con Mercadix. Genera un
+            histograma de distribución de precios en tiempo real y toma decisiones de compra inteligentes.
+        </p>
+    </div>
+
+    <!-- Itch.io Embed -->
+    <div class="mt-8 flex justify-center">
+        <iframe frameborder="0" src="https://itch.io/embed/2883734?border_width=3" width="500" height="171"
+                class="w-full max-w-sm">
+            <a href="https://pyoneerc1.itch.io/mercadix">Mercadix by pyoneerC1</a>
+        </iframe>
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-8 text-center text-gray-500 text-sm">
+        &copy; 2024 PyoneerC. No afiliado a Mercado Libre.
+        <a href="https://github.com/pyoneerC/Mercadix" target="_blank" class="text-blue-600 hover:underline">Ver en GitHub</a>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+<script src="{{ url_for('static', filename='js/progressbar.js') }}"></script>
 </body>
 </html>
