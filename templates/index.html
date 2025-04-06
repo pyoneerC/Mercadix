@@ -78,13 +78,13 @@
     <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Mercadix</h1>
     <form id="price-form" action="/" method="post" class="space-y-4">
         <div>
-            <label for="item" class="block text-gray-700 font-medium mb-1">Ítem:</label>
+            <label for="item" class="block text-gray-700 font-medium mb-1">Artículo a buscar:</label>
             <input type="text" id="item" name="item" required placeholder="Raqueta de tenis"
                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
         <div>
-            <label for="number_of_pages" class="block text-gray-700 font-medium mb-1">Número de páginas (1-10):</label>
-            <input type="number" id="number_of_pages" name="number_of_pages" required min="1" max="10" value="1"
+            <label for="number_of_pages" class="block text-gray-700 font-medium mb-1">Cantidad de páginas a escanear:</label>
+            <input type="number" id="number_of_pages" name="number_of_pages" required min="1" max="3" value="1"
                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
         <button type="submit" id="submit-button"
@@ -101,8 +101,13 @@
     <!-- Explanation -->
     <div class="mt-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-md">
         <p class="text-gray-700 text-center">
-            Descubre los mejores precios para cualquier artículo en Mercado Libre con Mercadix. Genera un
-            histograma de distribución de precios en tiempo real y toma decisiones de compra inteligentes.
+            Escribí el nombre de un producto y
+            <a href="https://mercadix.maxcomperatore.com/show_plot?item=ps4&number_of_pages=1"
+               target="_blank"
+               class="text-blue-600 font-medium hover:underline">
+                Mercadix te muestra en segundos
+            </a>
+            cuánto se está pagando por eso en Mercado Libre. Vas a ver un gráfico con los precios más bajos, más altos y la media, para saber si vale la pena o no comprar.
         </p>
     </div>
 
