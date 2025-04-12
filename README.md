@@ -35,7 +35,7 @@ To run this project on your local machine, follow these steps:
 
 1. **Clone the Repository**:
 ```bash
-   git clone https://github.com/tu_usuario/mercado-libre-price-chart.git
+git clone https://github.com/tu_usuario/mercado-libre-price-chart.git
 ```
    
 2. **Install Dependencies**:
