@@ -34,9 +34,9 @@ This project is a web application built with **Flask** that allows users to sear
 To run this project on your local machine, follow these steps:
 
 1. **Clone the Repository**:
-   ```bash
+```bash
    git clone https://github.com/tu_usuario/mercado-libre-price-chart.git
-    ```
+```
    
 2. **Install Dependencies**:
 
