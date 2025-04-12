@@ -4,91 +4,89 @@
 ![Website](https://img.shields.io/website?url=https%3A%2F%2Fmercado-libre-price-chart.vercel.app)
 ![GitHub License](https://img.shields.io/github/license/pyoneerc/mercado-libre-price-chart)
 
-## Descripción
+## Description
 
-Este proyecto es una aplicación web desarrollada en Flask que permite consultar precios de productos en MercadoLibre y visualizarlos en un histograma. Utiliza web scraping para obtener los precios, la API [monedas-api](https://github.com/pyoneerC/monedas-api) (desarrollada por mí) para el tipo de cambio actualizado a dólares, y Matplotlib para generar gráficos claros y concisos que representan eficazmente la variabilidad de los precios.
+This project is a web application built with **Flask** that allows users to search for product prices on MercadoLibre and visualize them in a histogram. It uses web scraping to collect price data, the [monedas-api](https://github.com/pyoneerC/monedas-api) (also developed by me) for real-time currency conversion to USD, and **Matplotlib** to generate clean, insightful graphs that illustrate price variability.
 
-> [!NOTE]
-> [Disponible en todos los navegadores web!](mercado-libre-price-chart.vercel.app)
+> [!NOTE]  
+> [Available in all modern browsers!](https://mercado-libre-price-chart.vercel.app)
 
-![Imagen de la Aplicación](media/price_histogram.png)
-![GIF de la Aplicación](media/demonstration.gif)
+![App Screenshot](media/price_histogram.png)  
+![App Demo GIF](media/demonstration.gif)
 
-> [!TIP]
-> Puedes ingresar cualquier artículo que desees en la barra de búsqueda!
+> [!TIP]  
+> You can search for any product you'd like using the search bar!
 
-![Imagen en IPHONE](media/iphone.png)
+![iPhone Screenshot](media/iphone.png)
 
-## Funcionalidades
+## Features
 
-- **Consulta de Precios**: Permite al usuario ingresar el nombre de un producto y el número de páginas para consultar en MercadoLibre.
-- **Generación de Gráfico**: Visualiza un histograma de los precios obtenidos, mostrando estadísticas relevantes como el promedio, la mediana, el máximo, el mínimo, y la desviación estándar.
-- **Visualización de Imágenes**: Incluye una imagen representativa del primer resultado de la búsqueda en el gráfico.
-- **Interfaz de Usuario**: Ofrece una interfaz simple para introducir los parámetros de búsqueda y mostrar los resultados.
+- **Price Lookup**: Enter the product name and number of pages to scrape on MercadoLibre.
+- **Graph Generation**: Displays a histogram of prices, including key statistics like average, median, max, min, and standard deviation.
+- **Image Display**: Shows a representative image from the first result directly on the graph.
+- **User Interface**: Simple and intuitive interface for entering search parameters and viewing results.
 
-> [!TIP]
-> Puedes descargar la imagen del gráfico y guardarla haciendo click en el botón "Download Image".
+> [!TIP]  
+> You can download the histogram image by clicking the "Download Image" button.
 
-## Instalación
+## Installation
 
-Para ejecutar este proyecto en tu máquina local, sigue estos pasos:
+To run this project on your local machine, follow these steps:
 
-1. **Clonar el Repositorio**:
+**Clone the Repository**:
    ```bash
    git clone https://github.com/tu_usuario/mercado-libre-price-chart.git
     ```
    
-2. **Instalar Dependencias**:
+2. **Install Dependencies**:
 
-Asegúrate de tener Python y pip instalados en tu sistema. Luego, instala las dependencias del proyecto con el siguiente comando:
+Make sure you have Python and `pip` installed on your system. Then, install the project dependencies with the following command:
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Configurar Variables de Entorno**:
+3. **Set Up Environment Variables**:
 
-Crea un archivo `.env` en el directorio raíz del proyecto y agrega las siguientes variables:
+Create a `.env` file in the root directory of the project and add the following variables:
    ```env
    FLASK_APP=app.py
    FLASK_ENV=development
    FLASK_DEBUG=0
    ```
 
-4. **Ejecutar la Aplicación**:
+4. **Run the Application**:
 
-Finalmente, ejecuta la aplicación con el siguiente comando:
+Finally, run the application with the following command:
    ```bash
    flask run
    ```
 
-La aplicación estará disponible en `http://127.0.0.1:5000`
+The application will be available at `http://127.0.0.1:5000`
 
-> [!WARNING]
-> Cuidado con ingresar un número muy alto de páginas, ya que la operación puede tardar varios segundos en completarse.
+> [!WARNING]  
+> Be cautious when requesting a high number of pages — the operation may take several seconds to complete.
 
+> [!CAUTION]  
+> Try to be as specific as possible with your search to get more accurate results. You can check the data source by clicking the **"View on MercadoLibre"** button.
 
-> [!CAUTION]
-> Intenta ser lo más específico posible en tu búsqueda para obtener resultados más precisos. Puedes ver de donde se obtienen los datos clickeando el botón que dice "View on MercadoLibre".
+![Price Histogram](media/chocolate_histogram.png)
 
+## Technologies Used
 
-![Histograma de Precios](media/chocolate_histogram.png)
+- **Flask**: Web framework for Python.
+- **Matplotlib**: Library for creating visualizations.
+- **BeautifulSoup**: Library for parsing HTML and extracting data.
+- **Requests**: HTTP library for sending and receiving data.
+- **NumPy**: Library for numerical computing in Python.
 
-## Tecnologías Utilizadas
+## Flow Diagram
 
-- **Flask**: Framework web para Python.
-- **Matplotlib**: Librería para la creación de gráficos.
-- **BeautifulSoup**: Biblioteca para el análisis de HTML y extracción de datos.
-- **Requests**: Biblioteca para hacer solicitudes HTTP.
-- **NumPy**: Biblioteca para el cálculo numérico en Python.
+![Flow Diagram](media/diagrama.png)
 
-## Diagrama de Flujo
+## Contributions
 
-![Diagrama de Flujo](media/diagrama.png)
+This is an open-source project, and contributions are welcome!
 
-## Contribuciones
+## License
 
-Este proyecto es de código abierto y las contribuciones son bienvenidas. 
-
-## Licencia
-
-Este proyecto está licenciado bajo la licencia MIT. Para más información, consulta el archivo [LICENSE](LICENSE).
+This project is licensed under the **MIT License**. For more information, see the [LICENSE](LICENSE) file.
