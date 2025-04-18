@@ -10,7 +10,7 @@ import numpy as np
 import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
-from flask import Flask, request, redirect, url_for, render_template, send_file
+from flask import Flask, request, redirect, url_for, render_template, send_file, abort
 
 load_dotenv()
 
@@ -50,8 +50,21 @@ def get_exchange_rate():
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        item = request.form["item"]
-        number_of_pages = int(request.form["number_of_pages"])
+        item = request.form["item"].strip()
+        number_of_pages = request.form["number_of_pages"].strip()
+
+        # Validate item
+        if not item or not re.match(r"^[a-zA-Z0-9\-\s]+$", item):
+            return render_template("error.html", error_message="Invalid item parameter."), 400
+
+        # Validate number_of_pages
+        try:
+            number_of_pages = int(number_of_pages)
+            if number_of_pages < 1 or number_of_pages > 3:
+                return render_template("error.html", error_message="Number of pages must be between 1 and 3."), 400
+        except ValueError:
+            return render_template("error.html", error_message="Number of pages must be a valid integer."), 400
+
         return redirect(url_for("show_plot", item=item, number_of_pages=number_of_pages))
     return render_template("index.html")
 
@@ -185,8 +198,21 @@ def plot_prices(prices_list, item, url, filter_outliers=True, threshold=3):
 
 @app.route("/show_plot")
 def show_plot():
-    item = request.args.get("item")
-    number_of_pages = int(request.args.get("number_of_pages"))
+    item = request.args.get("item", "").strip()
+    number_of_pages = request.args.get("number_of_pages", "").strip()
+
+    # Validate item
+    if not item or not re.match(r"^[a-zA-Z0-9\-\s]+$", item):
+        return render_template("error.html", error_message="Invalid item parameter."), 400
+
+    # Validate number_of_pages
+    try:
+        number_of_pages = int(number_of_pages)
+        if number_of_pages < 1 or number_of_pages > 10:
+            return render_template("error.html", error_message="Number of pages must be between 1 and 10."), 400
+    except ValueError:
+        return render_template("error.html", error_message="Number of pages must be a valid integer."), 400
+
     prices_list, url = get_prices(item, number_of_pages)
     if prices_list is None or url is None:
         error_message = "Failed to fetch prices. Please try searching fewer pages or check the item name."
@@ -217,8 +243,8 @@ def show_plot():
         avg_price_usd=int(avg_price / float(get_exchange_rate().replace(" ARS", ""))),
         median_price_usd=int(median_price / float(get_exchange_rate().replace(" ARS", ""))),
         max_price_usd=int(max_price / float(get_exchange_rate().replace(" ARS", ""))),
-        min_price_usd=int(min_price / float(get_exchange_rate().replace(" ARS", "")),
-                          ))
+        min_price_usd=int(min_price / float(get_exchange_rate().replace(" ARS", ""))),
+    )
 
 
 @app.errorhandler(500)
