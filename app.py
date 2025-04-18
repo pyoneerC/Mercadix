@@ -208,8 +208,8 @@ def show_plot():
     # Validate number_of_pages
     try:
         number_of_pages = int(number_of_pages)
-        if number_of_pages < 1 or number_of_pages > 10:
-            return render_template("error.html", error_message="Number of pages must be between 1 and 10."), 400
+        if number_of_pages < 1 or number_of_pages > 3:
+            return render_template("error.html", error_message="Number of pages must be between 1 and 3."), 400
     except ValueError:
         return render_template("error.html", error_message="Number of pages must be a valid integer."), 400
 
