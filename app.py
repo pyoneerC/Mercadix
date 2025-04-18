@@ -91,6 +91,7 @@ def get_prices(item, number_of_pages):
         return prices_cache[cache_key]
 
     prices_list = []
+    failed_pages = 0
     for i in range(number_of_pages):
         start_item = i * 50 + 1
         url = f"https://listado.mercadolibre.com.ar/{item}_Desde_{start_item}_NoIndex_True"
@@ -99,13 +100,23 @@ def get_prices(item, number_of_pages):
             response.raise_for_status()
             soup = BeautifulSoup(response.content, "html.parser")
             prices = soup.find_all("span", class_="andes-money-amount__fraction")
+
+            # If no prices are found, stop scraping further pages
+            if not prices:
+                app.logger.info(f"No more results found after {i} pages.")
+                break
+
             prices_list.extend([int(re.sub(r"\D", "", price.text)) for price in prices])
         except requests.exceptions.RequestException as e:
             app.logger.error(f"Error fetching prices: {e}")
-            return None, None
+            failed_pages += 1
 
-    prices_cache[cache_key] = (prices_list, url)
-    return prices_list, url
+    if not prices_list:
+        app.logger.info("No results found for the given search.")
+        return None, None, failed_pages
+
+    prices_cache[cache_key] = (prices_list, url, failed_pages)
+    return prices_list, url, failed_pages
 
 
 def format_x(value, tick_number):
@@ -113,7 +124,7 @@ def format_x(value, tick_number):
     return f"{int(value):,}"
 
 
-def plot_prices(prices_list, item, url, filter_outliers=True, threshold=3):
+def plot_prices(prices_list, item, url, failed_pages, filter_outliers=True, threshold=3):
     venta_dolar = get_exchange_rate()
     if not venta_dolar:
         app.logger.error("Failed to get exchange rate.")
@@ -159,7 +170,8 @@ def plot_prices(prices_list, item, url, filter_outliers=True, threshold=3):
     plt.title(
         f'Histogram of {item.replace("-", " ").upper()} prices in MercadoLibre Argentina ({current_date})\n'
         f"Number of items indexed: {len(prices_list)} ({request.args.get('number_of_pages')} pages)\n"
-        f"URL: {url}"
+        f"URL: {url}\n"
+        f"Failed to parse {failed_pages} pages."
     )
 
     def plot_stat_line(stat_value, color, label, linestyle="solid", linewidth=1):
@@ -213,7 +225,7 @@ def show_plot():
     except ValueError:
         return render_template("error.html", error_message="Number of pages must be a valid integer."), 400
 
-    prices_list, url = get_prices(item, number_of_pages)
+    prices_list, url, failed_pages = get_prices(item, number_of_pages)
     if prices_list is None or url is None:
         error_message = "Failed to fetch prices. Please try searching fewer pages or check the item name."
         return render_template("error.html", error_message=error_message), 500
@@ -224,7 +236,7 @@ def show_plot():
     min_price = float(min(prices_list))
     current_date = datetime.date.today().strftime("%d/%m/%Y")
 
-    plot_base64 = plot_prices(prices_list, item, url)
+    plot_base64 = plot_prices(prices_list, item, url, failed_pages)
     if plot_base64 is None:
         error_message = "Failed to generate plot. Please try again later."
         return render_template("error.html", error_message=error_message), 500
@@ -244,6 +256,7 @@ def show_plot():
         median_price_usd=int(median_price / float(get_exchange_rate().replace(" ARS", ""))),
         max_price_usd=int(max_price / float(get_exchange_rate().replace(" ARS", ""))),
         min_price_usd=int(min_price / float(get_exchange_rate().replace(" ARS", ""))),
+        failed_pages=failed_pages,
     )
 
 
