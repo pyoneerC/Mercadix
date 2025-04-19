@@ -143,6 +143,7 @@ def get_prices(item, number_of_pages, country_code='ar', condition='all'):
         return prices_cache[cache_key]
 
     prices_list = []
+    product_infos = []  # List to store product information (title, price, URL)
     failed_pages = 0
     domain = COUNTRY_CONFIG[country_code]['domain']
     
@@ -160,29 +161,63 @@ def get_prices(item, number_of_pages, country_code='ar', condition='all'):
             response = requests.get(url)
             response.raise_for_status()
             soup = BeautifulSoup(response.content, "html.parser")
-            prices = soup.find_all("span", class_="andes-money-amount__fraction")
-
-            # If no prices are found, stop scraping further pages
-            if not prices:
+            
+            # Find all product containers
+            product_containers = soup.select(".ui-search-result__wrapper")
+            
+            # If no products are found, stop scraping further pages
+            if not product_containers:
                 app.logger.info(f"No more results found after {i} pages.")
                 break
-
-            prices_list.extend([int(re.sub(r"\D", "", price.text)) for price in prices])
+            
+            # Extract product information for each container
+            for container in product_containers:
+                try:
+                    # Get product title
+                    title_elem = container.select_one(".ui-search-item__title")
+                    title = title_elem.text.strip() if title_elem else "Unknown Product"
+                    
+                    # Get product price
+                    price_elem = container.select_one(".andes-money-amount__fraction")
+                    if price_elem:
+                        price = int(re.sub(r"\D", "", price_elem.text))
+                    else:
+                        continue  # Skip products without a price
+                    
+                    # Get product URL
+                    url_elem = container.select_one(".ui-search-link")
+                    product_url = url_elem['href'] if url_elem else None
+                    
+                    # Add price to the list
+                    prices_list.append(price)
+                    
+                    # Add product info to the list
+                    product_infos.append({
+                        'title': title,
+                        'price': price,
+                        'url': product_url
+                    })
+                except Exception as e:
+                    app.logger.error(f"Error processing product: {e}")
+                    continue
         except requests.exceptions.RequestException as e:
             app.logger.error(f"Error fetching prices: {e}")
             failed_pages += 1
 
     if not prices_list:
         app.logger.info("No results found for the given search.")
-        return None, None, failed_pages
+        return None, None, failed_pages, None
 
     # For Brazilian prices, convert from centavos to reais if needed
     if country_code == 'br' and any(p > 10000 for p in prices_list):
         # Check if the prices seem to be in centavos (very high numbers)
         prices_list = [p / 100 for p in prices_list]
+        # Also update product_infos
+        for product in product_infos:
+            product['price'] = product['price'] / 100
 
-    prices_cache[cache_key] = (prices_list, url, failed_pages)
-    return prices_list, url, failed_pages
+    prices_cache[cache_key] = (prices_list, url, failed_pages, product_infos)
+    return prices_list, url, failed_pages, product_infos
 
 
 def get_amazon_prices(item, number_of_pages, country_code='us'):
@@ -192,6 +227,7 @@ def get_amazon_prices(item, number_of_pages, country_code='us'):
         return prices_cache[cache_key]
 
     prices_list = []
+    product_infos = []  # List to store product information (title, price, URL)
     failed_pages = 0
     domain = COUNTRY_CONFIG[country_code]['domain']
     
@@ -215,43 +251,76 @@ def get_amazon_prices(item, number_of_pages, country_code='us'):
             response.raise_for_status()
             soup = BeautifulSoup(response.content, "html.parser")
             
-            # Amazon has multiple price formats, we need to check them all
-            price_elements = soup.select('.a-price .a-offscreen')
+            # Find all product containers in Amazon search results
+            product_containers = soup.select('.s-result-item:not(.AdHolder)')
             
-            # If no prices are found, stop scraping further pages
-            if not price_elements:
+            # If no products are found, stop scraping further pages
+            if not product_containers:
                 app.logger.info(f"No more results found after {i} pages.")
                 break
-
-            # Extract prices from the elements
-            for price_element in price_elements:
-                price_text = price_element.text.strip()
-                # Extract numeric value from price (e.g., $24.99 -> 24.99)
-                price_match = re.search(r'[\d,]+\.?\d*', price_text)
-                if price_match:
+                
+            # Process each product container
+            for container in product_containers:
+                try:
+                    # Get product title
+                    title_elem = container.select_one('h2 .a-link-normal')
+                    title = title_elem.text.strip() if title_elem else "Unknown Product"
+                    
+                    # Get product price
+                    price_elem = container.select_one('.a-price .a-offscreen')
+                    if not price_elem:
+                        continue  # Skip products without a price
+                        
+                    price_text = price_elem.text.strip()
+                    price_match = re.search(r'[\d,]+\.?\d*', price_text)
+                    if not price_match:
+                        continue
+                        
                     price_str = price_match.group().replace(',', '')
                     try:
                         # Convert to float for decimal handling
                         price = float(price_str)
-                        # Convert to cents/pennies for consistency with the rest of the app
+                        # Convert to cents/pennies for consistency
                         price_cents = int(price * 100)
-                        prices_list.append(price_cents)
                     except ValueError:
                         continue
+                    
+                    # Get product URL
+                    url_elem = container.select_one('h2 .a-link-normal')
+                    product_url = None
+                    if url_elem and 'href' in url_elem.attrs:
+                        product_url = 'https://www.amazon.com' + url_elem['href'] if url_elem['href'].startswith('/') else url_elem['href']
+                    
+                    # Add price to the list
+                    prices_list.append(price_cents)
+                    
+                    # Add product info to the list
+                    product_infos.append({
+                        'title': title,
+                        'price': price_cents,
+                        'url': product_url
+                    })
+                except Exception as e:
+                    app.logger.error(f"Error processing Amazon product: {e}")
+                    continue
                         
         except requests.exceptions.RequestException as e:
-            app.logger.error(f"Error fetching prices: {e}")
+            app.logger.error(f"Error fetching Amazon prices: {e}")
             failed_pages += 1
 
     if not prices_list:
-        app.logger.info("No results found for the given search.")
-        return None, None, failed_pages
+        app.logger.info("No results found for the given Amazon search.")
+        return None, None, failed_pages, None
 
     # Convert from cents back to dollars for display
     prices_list = [p / 100 for p in prices_list]
     
-    prices_cache[cache_key] = (prices_list, url, failed_pages)
-    return prices_list, url, failed_pages
+    # Also update product_infos
+    for product in product_infos:
+        product['price'] = product['price'] / 100
+    
+    prices_cache[cache_key] = (prices_list, url, failed_pages, product_infos)
+    return prices_list, url, failed_pages, product_infos
 
 
 def format_x(value, tick_number):
@@ -402,11 +471,11 @@ def show_plot():
 
     # Choose the appropriate price fetching function based on country code
     if country_code == 'us':
-        prices_list, url, failed_pages = get_amazon_prices(item, number_of_pages, country_code)
+        prices_list, url, failed_pages, product_infos = get_amazon_prices(item, number_of_pages, country_code)
     else:
-        prices_list, url, failed_pages = get_prices(item, number_of_pages, country_code, condition)
+        prices_list, url, failed_pages, product_infos = get_prices(item, number_of_pages, country_code, condition)
         
-    if prices_list is None or url is None:
+    if prices_list is None or url is None or product_infos is None:
         error_message = "Failed to fetch prices. Please try searching fewer pages or check the item name."
         return render_template("error.html", error_message=error_message), 500
 
@@ -441,6 +510,51 @@ def show_plot():
     non_outliers = [p for p in prices_list if lower_bound <= p <= upper_bound]
     outliers = [p for p in prices_list if p < lower_bound or p > upper_bound]
     
+    # Find products near the median (±5%)
+    median_range_min = median_price * 0.95  # 5% below median
+    median_range_max = median_price * 1.05  # 5% above median
+    
+    # Find products close to median, cheapest, and most expensive
+    products_near_median = []
+    cheapest_product = None
+    most_expensive_product = None
+    
+    # First scan to find cheapest and most expensive products
+    min_price_found = float('inf')
+    max_price_found = float('-inf')
+    
+    for product in product_infos:
+        price = product['price']
+        
+        # Check for cheapest product
+        if price < min_price_found:
+            min_price_found = price
+            cheapest_product = product
+            
+        # Check for most expensive product
+        if price > max_price_found:
+            max_price_found = price
+            most_expensive_product = product
+            
+        # Check if product is within ±5% of median
+        if median_range_min <= price <= median_range_max:
+            # Include price percentage difference from median
+            product_copy = product.copy()
+            percentage_diff = ((price - median_price) / median_price) * 100
+            product_copy['percentage_diff'] = round(percentage_diff, 2)
+            products_near_median.append(product_copy)
+
+    # Limit to reasonable number of products to display (at most 10)
+    if len(products_near_median) > 10:
+        # Sort by how close they are to the median
+        products_near_median.sort(key=lambda x: abs(x['percentage_diff']))
+        products_near_median = products_near_median[:10]
+    
+    # Convert to JSON for the frontend
+    products_near_median_json = json.dumps(products_near_median)
+    cheapest_product_json = json.dumps(cheapest_product) if cheapest_product else None
+    most_expensive_product_json = json.dumps(most_expensive_product) if most_expensive_product else None
+    
     # Convert prices to JSON for the frontend
     prices_json = json.dumps(non_outliers)
     outliers_json = json.dumps(outliers)
@@ -474,6 +588,9 @@ def show_plot():
         country_name=country_config['country_name'],
         marketplace_name=marketplace_name,
         condition=condition,
+        products_near_median_json=products_near_median_json,
+        cheapest_product_json=cheapest_product_json,
+        most_expensive_product_json=most_expensive_product_json,
     )
 
 
