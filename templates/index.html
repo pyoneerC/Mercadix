@@ -47,6 +47,47 @@
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
 <meta name="theme-color" content="#ffffff">
+<style>
+    /* Custom toggle button styles */
+    .toggle-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+        position: relative;
+    }
+    .toggle-option {
+        background-color: #f3f4f6;
+        color: #4b5563;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 1;
+        flex: 1;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    .toggle-option.active {
+        background-color: #3b82f6;
+        color: white;
+    }
+    .toggle-option:first-child {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .toggle-option:last-child {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+    .toggle-option img {
+        width: 24px;
+        height: 16px;
+    }
+</style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
@@ -77,6 +118,19 @@
 <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
     <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Mercadix</h1>
     <form id="price-form" action="/" method="post" class="space-y-4">
+        <!-- Country selector toggle -->
+        <div class="toggle-container">
+            <label for="country-ar" class="toggle-option active" id="toggle-ar">
+                <img src="https://flagcdn.com/w20/ar.png" srcset="https://flagcdn.com/w40/ar.png 2x" alt="Argentina">
+                Argentina
+            </label>
+            <label for="country-br" class="toggle-option" id="toggle-br">
+                <img src="https://flagcdn.com/w20/br.png" srcset="https://flagcdn.com/w40/br.png 2x" alt="Brasil">
+                Brasil
+            </label>
+            <input type="hidden" name="country" id="country" value="ar">
+        </div>
+
         <div>
             <label for="item" class="block text-gray-700 font-medium mb-1">Artículo a buscar:</label>
             <input type="text" id="item" name="item" required placeholder="Raqueta de tenis"
@@ -114,7 +168,7 @@
     <!-- Footer -->
     <footer class="mt-10 border-t border-gray-200 pt-6 text-sm text-gray-600">
         <div class="flex flex-col items-center gap-2 text-center">
-            <p>&copy; 2024 <i>PyoneerC</i> — No afiliado a Mercado Libre.</p>
+            <p>&copy; 2025 <i>PyoneerC</i> — No afiliado a Mercado Libre.</p>
             <div class="flex flex-wrap justify-center gap-3">
                 <a href="https://github.com/pyoneerC/Mercadix" target="_blank" class="text-blue-600 hover:underline">
                     GitHub
@@ -133,6 +187,27 @@
     </footer>
 
 </div>
+
+<script>
+    // Country toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleAr = document.getElementById('toggle-ar');
+        const toggleBr = document.getElementById('toggle-br');
+        const countryInput = document.getElementById('country');
+        
+        toggleAr.addEventListener('click', function() {
+            toggleAr.classList.add('active');
+            toggleBr.classList.remove('active');
+            countryInput.value = 'ar';
+        });
+        
+        toggleBr.addEventListener('click', function() {
+            toggleBr.classList.add('active');
+            toggleAr.classList.remove('active');
+            countryInput.value = 'br';
+        });
+    });
+</script>
 
 <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 <script src="{{ url_for('static', filename='js/progressbar.js') }}"></script>

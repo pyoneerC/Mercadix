@@ -26,13 +26,30 @@
       .chart-content.active {
          display: block;
       }
+      .country-badge {
+         display: inline-flex;
+         align-items: center;
+         gap: 0.5rem;
+         padding: 0.25rem 0.75rem;
+         border-radius: 9999px;
+         background-color: rgba(255, 255, 255, 0.2);
+         margin-top: 0.5rem;
+      }
+      .country-badge img {
+         width: 20px;
+         height: 14px;
+      }
    </style>
 </head>
 <body class="bg-gradient-to-r from-blue-50 to-blue-100 min-h-screen flex items-center justify-center p-6">
    <div class="bg-white shadow-lg rounded-lg overflow-hidden max-w-5xl w-full">
       <header class="bg-blue-600 text-white text-center py-6">
          <h1 class="text-4xl font-bold">Histograma de Precios</h1>
-         <p class="text-sm mt-2">Precios de {{ item | upper }} en Mercado Libre</p>
+         <p class="text-sm mt-2">Precios de {{ item | upper }} en MercadoLi{{ "v" if country_code == "br" else "b" }}re</p>
+         <div class="country-badge">
+            <img src="https://flagcdn.com/w20/{{ country_code }}.png" srcset="https://flagcdn.com/w40/{{ country_code }}.png 2x" alt="{{ country_name }}">
+            {{ country_name }}
+         </div>
       </header>
       <main class="p-6">
          <!-- Chart Tabs -->
@@ -63,6 +80,9 @@
                data-std="{{ std_dev }}"
                data-percentile25="{{ percentile_25 }}"
                data-exchange="{{ exchange_rate }}"
+               data-currency="{{ currency }}"
+               data-country="{{ country_name }}"
+               data-country-code="{{ country_code }}"
                class="rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 mb-6"
             ></div>
          </div>
@@ -81,22 +101,22 @@
          <div class="grid grid-cols-2 gap-4 text-center">
             <div class="bg-blue-50 p-4 rounded-lg shadow">
                <p class="text-lg font-semibold text-blue-600">Mediana</p>
-               <p class="text-xl font-bold">{{ median_price | format_number }} ARS</p>
+               <p class="text-xl font-bold">{{ median_price | format_number }} {{ currency }}</p>
                <p class="text-sm text-gray-500">({{ median_price_usd | format_number }} USD)</p>
             </div>
             <div class="bg-blue-50 p-4 rounded-lg shadow">
                <p class="text-lg font-semibold text-blue-600">Promedio</p>
-               <p class="text-xl font-bold">{{ avg_price | format_number }} ARS</p>
+               <p class="text-xl font-bold">{{ avg_price | format_number }} {{ currency }}</p>
                <p class="text-sm text-gray-500">({{ avg_price_usd | format_number }} USD)</p>
             </div>
             <div class="bg-blue-50 p-4 rounded-lg shadow">
                <p class="text-lg font-semibold text-blue-600">Máximo</p>
-               <p class="text-xl font-bold">{{ max_price | format_number }} ARS</p>
+               <p class="text-xl font-bold">{{ max_price | format_number }} {{ currency }}</p>
                <p class="text-sm text-gray-500">({{ max_price_usd | format_number }} USD)</p>
             </div>
             <div class="bg-blue-50 p-4 rounded-lg shadow">
                <p class="text-lg font-semibold text-blue-600">Mínimo</p>
-               <p class="text-xl font-bold">{{ min_price | format_number }} ARS</p>
+               <p class="text-xl font-bold">{{ min_price | format_number }} {{ currency }}</p>
                <p class="text-sm text-gray-500">({{ min_price_usd | format_number }} USD)</p>
             </div>
          </div>
@@ -109,7 +129,7 @@
             </a>
             <a
                href="data:image/png;base64,{{ plot_base64 }}"
-               download="{{ item }}_price_histogram_MercadoLibre_{{ current_date }}_{{ number_of_pages }}_pages.png"
+               download="{{ item }}_price_histogram_MercadoLi{{ 'v' if country_code == 'br' else 'b' }}re_{{ country_code }}_{{ current_date }}_{{ number_of_pages }}_pages.png"
                class="bg-green-200 text-green-800 py-2 px-4 rounded-lg shadow hover:bg-green-300 transition duration-300"
                id="download-btn"
             >
@@ -120,12 +140,12 @@
                target="_blank"
                class="bg-gray-200 text-gray-800 py-2 px-4 rounded-lg shadow hover:bg-gray-300 transition duration-300"
             >
-               Ver en Mercado Libre
+               Ver en MercadoLi{{ "v" if country_code == "br" else "b" }}re
             </a>
          </div>
       </main>
       <footer class="bg-gray-100 text-center py-4 text-sm text-gray-500">
-         &copy; 2025 PyoneerC. No afiliado a Mercado Libre.
+         &copy; 2025 PyoneerC. No afiliado a MercadoLi{{ "v" if country_code == "br" else "b" }}re.
          <a
             href="https://github.com/pyoneerC/mercado-libre-price-chart"
             target="_blank"
@@ -179,7 +199,7 @@
                      });
                      const a = document.createElement('a');
                      a.href = url;
-                     a.download = "{{ item }}_price_histogram_interactive_{{ current_date }}_{{ number_of_pages }}_pages.png";
+                     a.download = "{{ item }}_price_histogram_interactive_{{ country_code }}_{{ current_date }}_{{ number_of_pages }}_pages.png";
                      document.body.appendChild(a);
                      a.click();
                      document.body.removeChild(a);

@@ -21,6 +21,31 @@ app = Flask(__name__)
 API_URL = "https://fastapiproject-1-eziw.onrender.com/blue"
 prices_cache = {}
 
+# Domain configurations
+COUNTRY_CONFIG = {
+    'ar': {
+        'domain': 'mercadolibre.com.ar',
+        'currency': 'ARS',
+        'country_name': 'Argentina',
+        'exchange_rate_api': API_URL,
+        'needs_exchange_rate': True
+    },
+    'br': {
+        'domain': 'mercadolivre.com.br',
+        'currency': 'BRL',
+        'country_name': 'Brasil',
+        'exchange_rate_api': None,
+        'needs_exchange_rate': False,
+        'fixed_usd_rate': 5.0  # Fixed approximate exchange rate for Brazil (1 USD = ~5 BRL)
+    }
+}
+
+# Default exchange rates (will be updated by API calls)
+exchange_rates = {
+    'ar': None,
+    'br': None
+}
+
 
 @app.template_filter("format_number")
 def format_number(value):
@@ -30,22 +55,30 @@ def format_number(value):
         return value
 
 
-exchange_rate = None
-
-
-def get_exchange_rate():
+def get_exchange_rate(country_code='ar'):
     """Fetch the current exchange rate from the API."""
-    global exchange_rate
-    if exchange_rate is not None:
-        return exchange_rate
+    global exchange_rates
+    
+    country_config = COUNTRY_CONFIG[country_code]
+    
+    # If we don't need an exchange rate for this country, use the fixed rate
+    if not country_config['needs_exchange_rate']:
+        return f"{country_config['fixed_usd_rate']} {country_config['currency']}"
+    
+    # If we already have a cached rate, return it
+    if exchange_rates[country_code] is not None:
+        return exchange_rates[country_code]
+    
+    # Otherwise fetch from API (for Argentina)
     try:
-        response = requests.get(API_URL)
+        response = requests.get(country_config['exchange_rate_api'])
         response.raise_for_status()
-        exchange_rate = response.json().get("venta", None)
-        return exchange_rate
+        exchange_rates[country_code] = response.json().get("venta", None)
+        return exchange_rates[country_code]
     except requests.exceptions.RequestException as e:
-        app.logger.error(f"Error fetching exchange rate: {e}")
-        return None
+        app.logger.error(f"Error fetching exchange rate for {country_code}: {e}")
+        # Return a fallback value if the API fails
+        return f"1000 {country_config['currency']}"
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -53,6 +86,11 @@ def index():
     if request.method == "POST":
         item = request.form["item"].strip()
         number_of_pages = request.form["number_of_pages"].strip()
+        country_code = request.form.get("country", "ar")  # Default to Argentina if not specified
+
+        # Validate country code
+        if country_code not in COUNTRY_CONFIG:
+            return render_template("error.html", error_message="Invalid country code."), 400
 
         # Validate item
         if not item or not re.match(r"^[a-zA-Z0-9\-\s]+$", item):
@@ -66,7 +104,7 @@ def index():
         except ValueError:
             return render_template("error.html", error_message="Number of pages must be a valid integer."), 400
 
-        return redirect(url_for("show_plot", item=item, number_of_pages=number_of_pages))
+        return redirect(url_for("show_plot", item=item, number_of_pages=number_of_pages, country=country_code))
     return render_template("index.html")
 
 
@@ -85,17 +123,19 @@ def serve_assetlinks():
     return send_file('assetlinks.json', mimetype='application/json')
 
 
-def get_prices(item, number_of_pages):
-    """Fetch the prices of the given item from MercadoLibre."""
-    cache_key = (item, number_of_pages)
+def get_prices(item, number_of_pages, country_code='ar'):
+    """Fetch the prices of the given item from MercadoLibre/MercadoLivre."""
+    cache_key = (item, number_of_pages, country_code)
     if cache_key in prices_cache:
         return prices_cache[cache_key]
 
     prices_list = []
     failed_pages = 0
+    domain = COUNTRY_CONFIG[country_code]['domain']
+    
     for i in range(number_of_pages):
         start_item = i * 50 + 1
-        url = f"https://listado.mercadolibre.com.ar/{item}_Desde_{start_item}_NoIndex_True"
+        url = f"https://listado.{domain}/{item}_Desde_{start_item}_NoIndex_True"
         try:
             response = requests.get(url)
             response.raise_for_status()
@@ -116,6 +156,11 @@ def get_prices(item, number_of_pages):
         app.logger.info("No results found for the given search.")
         return None, None, failed_pages
 
+    # For Brazilian prices, convert from centavos to reais if needed
+    if country_code == 'br' and any(p > 10000 for p in prices_list):
+        # Check if the prices seem to be in centavos (very high numbers)
+        prices_list = [p / 100 for p in prices_list]
+
     prices_cache[cache_key] = (prices_list, url, failed_pages)
     return prices_list, url, failed_pages
 
@@ -125,12 +170,21 @@ def format_x(value, tick_number):
     return f"{int(value):,}"
 
 
-def plot_prices(prices_list, item, url, failed_pages, filter_outliers=True, threshold=3):
-    venta_dolar = get_exchange_rate()
-    if not venta_dolar:
-        app.logger.error("Failed to get exchange rate.")
+def plot_prices(prices_list, item, url, failed_pages, country_code='ar', filter_outliers=True, threshold=3):
+    country_config = COUNTRY_CONFIG[country_code]
+    currency = country_config['currency']
+    country_name = country_config['country_name']
+    
+    venta_dolar_str = get_exchange_rate(country_code)
+    if not venta_dolar_str:
+        app.logger.error(f"Failed to get exchange rate for {country_code}.")
         return None
-    venta_dolar = float(venta_dolar.replace(" ARS", ""))
+    
+    try:
+        venta_dolar = float(venta_dolar_str.replace(f" {currency}", ""))
+    except (ValueError, TypeError):
+        app.logger.error(f"Failed to parse exchange rate: {venta_dolar_str}")
+        venta_dolar = country_config.get('fixed_usd_rate', 1000)  # Fallback
 
     # Compute statistics on the full dataset
     std_dev = np.std(prices_list)
@@ -165,11 +219,11 @@ def plot_prices(prices_list, item, url, failed_pages, filter_outliers=True, thre
         else 10000
     )
 
-    plt.xlabel("Price in ARS")
+    plt.xlabel(f"Price in {currency}")
     plt.ylabel("Frequency")
     current_date = datetime.date.today().strftime("%d/%m/%Y")
     plt.title(
-        f'Histogram of {item.replace("-", " ").upper()} prices in MercadoLibre Argentina ({current_date})\n'
+        f'Histogram of {item.replace("-", " ").upper()} prices in MercadoLi{"v" if country_code == "br" else "b"}re {country_name} ({current_date})\n'
         f"Number of items indexed: {len(prices_list)} ({request.args.get('number_of_pages')} pages)\n"
         f"URL: {url}\n"
         f"Failed to parse {failed_pages} pages."
@@ -180,7 +234,7 @@ def plot_prices(prices_list, item, url, failed_pages, filter_outliers=True, thre
         plt.text(
             stat_value + x_pos_offset,
             y_position,
-            f"{label}: {int(stat_value):,} ARS ({int(stat_value / venta_dolar):,} USD)",
+            f"{label}: {int(stat_value):,} {currency} ({int(stat_value / venta_dolar):,} USD)",
             rotation=90,
             color=color,
         )
@@ -213,6 +267,11 @@ def plot_prices(prices_list, item, url, failed_pages, filter_outliers=True, thre
 def show_plot():
     item = request.args.get("item", "").strip()
     number_of_pages = request.args.get("number_of_pages", "").strip()
+    country_code = request.args.get("country", "ar")  # Default to Argentina if not specified
+
+    # Validate country code
+    if country_code not in COUNTRY_CONFIG:
+        return render_template("error.html", error_message="Invalid country code."), 400
 
     # Validate item
     if not item or not re.match(r"^[a-zA-Z0-9\-\s]+$", item):
@@ -226,7 +285,7 @@ def show_plot():
     except ValueError:
         return render_template("error.html", error_message="Number of pages must be a valid integer."), 400
 
-    prices_list, url, failed_pages = get_prices(item, number_of_pages)
+    prices_list, url, failed_pages = get_prices(item, number_of_pages, country_code)
     if prices_list is None or url is None:
         error_message = "Failed to fetch prices. Please try searching fewer pages or check the item name."
         return render_template("error.html", error_message=error_message), 500
@@ -238,10 +297,19 @@ def show_plot():
     std_dev = float(np.std(prices_list))
     percentile_25 = float(np.percentile(prices_list, 25))
     current_date = datetime.date.today().strftime("%d/%m/%Y")
-    exchange_rate = float(get_exchange_rate().replace(" ARS", ""))
+    
+    country_config = COUNTRY_CONFIG[country_code]
+    currency = country_config['currency']
+    
+    # Get exchange rate - use fixed rate for Brazil
+    if country_config['needs_exchange_rate']:
+        exchange_rate_str = get_exchange_rate(country_code)
+        exchange_rate = float(exchange_rate_str.replace(f" {currency}", ""))
+    else:
+        exchange_rate = country_config['fixed_usd_rate']
     
     # Generate the plot for backward compatibility and image download
-    plot_base64 = plot_prices(prices_list, item, url, failed_pages)
+    plot_base64 = plot_prices(prices_list, item, url, failed_pages, country_code)
     if plot_base64 is None:
         error_message = "Failed to generate plot. Please try again later."
         return render_template("error.html", error_message=error_message), 500
@@ -278,6 +346,9 @@ def show_plot():
         max_price_usd=int(max_price / exchange_rate),
         min_price_usd=int(min_price / exchange_rate),
         failed_pages=failed_pages,
+        country_code=country_code,
+        currency=country_config['currency'],
+        country_name=country_config['country_name'],
     )
 
 

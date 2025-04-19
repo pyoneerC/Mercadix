@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const numberOfPages = chartContainer.dataset.pages || '1';
   const failedPages = chartContainer.dataset.failed || '0';
   const exchangeRate = parseFloat(chartContainer.dataset.exchange || '0');
+  const currency = chartContainer.dataset.currency || 'ARS';
+  const countryName = chartContainer.dataset.country || 'Argentina';
+  const countryCode = chartContainer.dataset.countryCode || 'ar';
   
   // Calculate statistics (already available in the HTML, but recalculated for completeness)
   const medianPrice = parseFloat(chartContainer.dataset.median || '0');
@@ -27,14 +30,27 @@ document.addEventListener('DOMContentLoaded', function() {
   function formatNumber(num) {
     return new Intl.NumberFormat('es-AR').format(Math.round(num));
   }
+  
+  // Function to format numbers with abbreviations (K, M)
+  function abbreviateNumber(num) {
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1) + 'M';
+    } else if (num >= 1000) {
+      return (num / 1000).toFixed(1) + 'K';
+    }
+    return Math.round(num).toString();
+  }
 
   // Generate histogram data
   const histogramData = generateHistogramData(priceData);
+
+  // Determine if we're using MercadoLibre or MercadoLivre based on country
+  const marketplaceName = countryCode === 'br' ? 'MercadoLivre' : 'MercadoLibre';
   
   // Chart options
   const option = {
     title: {
-      text: `Histogram of ${item.replace('-', ' ').toUpperCase()} prices in MercadoLibre Argentina (${currentDate})`,
+      text: `Histogram of ${item.replace('-', ' ').toUpperCase()} prices in ${marketplaceName} ${countryName} (${currentDate})`,
       subtext: `Number of items indexed: ${priceData.length} (${numberOfPages} pages)\nURL: ${url}\nFailed to parse ${failedPages} pages.`,
       left: 'center'
     },
@@ -46,14 +62,19 @@ document.addEventListener('DOMContentLoaded', function() {
       formatter: function(params) {
         const range = params[0].name;
         const count = params[0].value;
-        const ars = range.split(' - ')[0].replace('ARS ', '');
+        const localCurrency = range.split(' - ')[0].replace(`${currency} `, '');
         
-        // Calculate USD value
-        const usdValue = Math.round(parseInt(ars.replace(/,/g, '')) / exchangeRate);
+        // Only show USD conversion if exchange rate is valid and country is Argentina
+        let usdPart = '';
+        if (countryCode === 'ar' && exchangeRate > 0) {
+          const usdValue = Math.round(parseInt(localCurrency.replace(/,/g, '')) / exchangeRate);
+          if (usdValue > 12) {
+            usdPart = `<br><strong>USD:</strong> ~${formatNumber(usdValue)} USD`;
+          }
+        }
         
         return `<strong>Price Range:</strong> ${range}<br>
-                <strong>Count:</strong> ${count} items<br>
-                <strong>USD:</strong> ~${formatNumber(usdValue)} USD`;
+                <strong>Count:</strong> ${count} items${usdPart}`;
       }
     },
     toolbox: {
@@ -72,11 +93,20 @@ document.addEventListener('DOMContentLoaded', function() {
     xAxis: {
       type: 'category',
       data: histogramData.bins,
-      name: 'Price in ARS',
+      name: `Price in ${currency}`,
       nameLocation: 'middle',
       nameGap: 30,
       axisLabel: {
-        rotate: 45
+        rotate: 45,
+        formatter: function(value) {
+          // Extract the price value from the range string
+          const priceMatch = value.match(/(\d[\d.,]*)/);
+          if (priceMatch && priceMatch[1]) {
+            const priceValue = parseFloat(priceMatch[1].replace(/[,.]/g, ''));
+            return `${currency} ${abbreviateNumber(priceValue)}`;
+          }
+          return value;
+        }
       }
     },
     yAxis: {
@@ -137,11 +167,14 @@ function generateHistogramData(prices) {
   const bins = [];
   const counts = [];
   
+  // Get currency from data attributes
+  const currency = document.getElementById('chart-container').dataset.currency || 'ARS';
+  
   // Fill bins and initialize counts
   for (let i = 0; i < numberOfBins; i++) {
     const binStart = min + i * binSize;
     const binEnd = min + (i + 1) * binSize;
-    bins.push(`ARS ${formatNumber(binStart)} - ${formatNumber(binEnd)}`);
+    bins.push(`${currency} ${formatNumber(binStart)} - ${formatNumber(binEnd)}`);
     counts.push(0);
   }
   
@@ -156,6 +189,8 @@ function generateHistogramData(prices) {
 
 // Function to create a mark line for statistics
 function createMarkLine(name, value, color, lineType = 'solid') {
+  const currency = document.getElementById('chart-container').dataset.currency || 'ARS';
+  
   return {
     name,
     type: 'line',
@@ -163,7 +198,7 @@ function createMarkLine(name, value, color, lineType = 'solid') {
       silent: true,
       symbol: 'none',
       label: {
-        formatter: `${name}: {c} ARS`,
+        formatter: `${name}: {c} ${currency}`,
         position: 'insideEndTop',
         fontSize: 12,
         color: color,
