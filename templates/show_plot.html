@@ -6,21 +6,78 @@
    <title>Price Histogram</title>
    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
    <script src="https://cdn.tailwindcss.com"></script>
+   <!-- Include ECharts -->
+   <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+   <style>
+      #chart-container {
+         width: 100%;
+         height: 400px;
+      }
+      .chart-tab-active {
+         background-color: #3b82f6;
+         color: white;
+      }
+      .chart-tab {
+         transition: all 0.3s ease;
+      }
+      .chart-content {
+         display: none;
+      }
+      .chart-content.active {
+         display: block;
+      }
+   </style>
 </head>
 <body class="bg-gradient-to-r from-blue-50 to-blue-100 min-h-screen flex items-center justify-center p-6">
-   <div class="bg-white shadow-lg rounded-lg overflow-hidden max-w-4xl w-full">
+   <div class="bg-white shadow-lg rounded-lg overflow-hidden max-w-5xl w-full">
       <header class="bg-blue-600 text-white text-center py-6">
          <h1 class="text-4xl font-bold">Histograma de Precios</h1>
          <p class="text-sm mt-2">Precios de {{ item | upper }} en Mercado Libre</p>
       </header>
       <main class="p-6">
-         <div class="flex justify-center mb-6">
-            <img
-               src="data:image/png;base64,{{ plot_base64 }}"
-               alt="Price Histogram"
-               class="rounded-lg shadow-md hover:scale-105 transition-transform duration-300 max-w-full h-auto"
-            />
+         <!-- Chart Tabs -->
+         <div class="flex border-b mb-4">
+            <button class="chart-tab chart-tab-active py-2 px-4 font-medium rounded-t-lg" data-target="interactive">
+               Gráfico Interactivo
+            </button>
+            <button class="chart-tab py-2 px-4 font-medium rounded-t-lg" data-target="static">
+               Gráfico Estático
+            </button>
          </div>
+
+         <!-- Interactive Chart (ECharts) -->
+         <div class="chart-content active" id="interactive-content">
+            <div 
+               id="chart-container" 
+               data-prices="{{ prices_json }}"
+               data-outliers="{{ outliers_json }}"
+               data-item="{{ item }}"
+               data-url="{{ url }}"
+               data-date="{{ current_date }}"
+               data-pages="{{ number_of_pages }}"
+               data-failed="{{ failed_pages }}"
+               data-median="{{ median_price }}"
+               data-avg="{{ avg_price }}"
+               data-max="{{ max_price }}"
+               data-min="{{ min_price }}" 
+               data-std="{{ std_dev }}"
+               data-percentile25="{{ percentile_25 }}"
+               data-exchange="{{ exchange_rate }}"
+               class="rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 mb-6"
+            ></div>
+         </div>
+
+         <!-- Static Chart (Original) -->
+         <div class="chart-content" id="static-content">
+            <div class="flex justify-center mb-6">
+               <img
+                  src="data:image/png;base64,{{ plot_base64 }}"
+                  alt="Price Histogram"
+                  class="rounded-lg shadow-md hover:scale-105 transition-transform duration-300 max-w-full h-auto"
+               />
+            </div>
+         </div>
+
          <div class="grid grid-cols-2 gap-4 text-center">
             <div class="bg-blue-50 p-4 rounded-lg shadow">
                <p class="text-lg font-semibold text-blue-600">Mediana</p>
@@ -54,6 +111,7 @@
                href="data:image/png;base64,{{ plot_base64 }}"
                download="{{ item }}_price_histogram_MercadoLibre_{{ current_date }}_{{ number_of_pages }}_pages.png"
                class="bg-green-200 text-green-800 py-2 px-4 rounded-lg shadow hover:bg-green-300 transition duration-300"
+               id="download-btn"
             >
                Descargar gráfico
             </a>
@@ -77,5 +135,65 @@
          </a>
       </footer>
    </div>
+   
+   <!-- Chart switching script -->
+   <script>
+      document.addEventListener('DOMContentLoaded', function() {
+         const tabs = document.querySelectorAll('.chart-tab');
+         const contents = document.querySelectorAll('.chart-content');
+         
+         tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+               // Remove active class from all tabs and contents
+               tabs.forEach(t => t.classList.remove('chart-tab-active'));
+               contents.forEach(c => c.classList.remove('active'));
+               
+               // Add active class to current tab
+               this.classList.add('chart-tab-active');
+               
+               // Show corresponding content
+               const target = this.getAttribute('data-target');
+               document.getElementById(target + '-content').classList.add('active');
+               
+               // Refresh ECharts if switching to interactive tab
+               if (target === 'interactive' && window.priceHistogramChart) {
+                  window.priceHistogramChart.resize();
+               }
+            });
+         });
+         
+         // Update download button for ECharts
+         const downloadBtn = document.getElementById('download-btn');
+         const originalHref = downloadBtn.href;
+         
+         tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+               const target = this.getAttribute('data-target');
+               
+               if (target === 'interactive' && window.priceHistogramChart) {
+                  downloadBtn.onclick = function(e) {
+                     e.preventDefault();
+                     const url = window.priceHistogramChart.getDataURL({
+                        backgroundColor: '#fff',
+                        pixelRatio: 2
+                     });
+                     const a = document.createElement('a');
+                     a.href = url;
+                     a.download = "{{ item }}_price_histogram_interactive_{{ current_date }}_{{ number_of_pages }}_pages.png";
+                     document.body.appendChild(a);
+                     a.click();
+                     document.body.removeChild(a);
+                  };
+               } else {
+                  downloadBtn.onclick = null;
+                  downloadBtn.href = originalHref;
+               }
+            });
+         });
+      });
+   </script>
+   
+   <!-- Include the ECharts visualization script -->
+   <script src="{{ url_for('static', filename='js/chart.js') }}"></script>
 </body>
 </html>

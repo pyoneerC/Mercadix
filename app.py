@@ -3,6 +3,7 @@ import datetime
 import io
 import os
 import re
+import json
 
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
@@ -234,28 +235,48 @@ def show_plot():
     avg_price = float(np.mean(prices_list))
     max_price = float(max(prices_list))
     min_price = float(min(prices_list))
+    std_dev = float(np.std(prices_list))
+    percentile_25 = float(np.percentile(prices_list, 25))
     current_date = datetime.date.today().strftime("%d/%m/%Y")
-
+    exchange_rate = float(get_exchange_rate().replace(" ARS", ""))
+    
+    # Generate the plot for backward compatibility and image download
     plot_base64 = plot_prices(prices_list, item, url, failed_pages)
     if plot_base64 is None:
         error_message = "Failed to generate plot. Please try again later."
         return render_template("error.html", error_message=error_message), 500
 
+    # Filter outliers for the interactive chart (same logic as in plot_prices)
+    threshold = 3
+    lower_bound = avg_price - threshold * std_dev
+    upper_bound = avg_price + threshold * std_dev
+    non_outliers = [p for p in prices_list if lower_bound <= p <= upper_bound]
+    outliers = [p for p in prices_list if p < lower_bound or p > upper_bound]
+    
+    # Convert prices to JSON for the frontend
+    prices_json = json.dumps(non_outliers)
+    outliers_json = json.dumps(outliers)
+
     return render_template(
         "show_plot.html",
         plot_base64=plot_base64,
+        prices_json=prices_json,
+        outliers_json=outliers_json,
         url=url,
         median_price=median_price,
         avg_price=avg_price,
         max_price=max_price,
         min_price=min_price,
+        std_dev=std_dev,
+        percentile_25=percentile_25,
         item=item,
         number_of_pages=number_of_pages,
         current_date=current_date,
-        avg_price_usd=int(avg_price / float(get_exchange_rate().replace(" ARS", ""))),
-        median_price_usd=int(median_price / float(get_exchange_rate().replace(" ARS", ""))),
-        max_price_usd=int(max_price / float(get_exchange_rate().replace(" ARS", ""))),
-        min_price_usd=int(min_price / float(get_exchange_rate().replace(" ARS", ""))),
+        exchange_rate=exchange_rate,
+        avg_price_usd=int(avg_price / exchange_rate),
+        median_price_usd=int(median_price / exchange_rate),
+        max_price_usd=int(max_price / exchange_rate),
+        min_price_usd=int(min_price / exchange_rate),
         failed_pages=failed_pages,
     )
 
