@@ -1,35 +1,51 @@
-# MercadoLibre Price Chart
+# Mercadix: Price Analysis for Mercado Libre
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/pyoneerC/mercado-libre-price-chart)
 ![Website](https://img.shields.io/website?url=https%3A%2F%2Fmercado-libre-price-chart.vercel.app)
 ![GitHub License](https://img.shields.io/github/license/pyoneerc/mercado-libre-price-chart)
 
-## Description
+## What is Mercadix?
 
-This project is a web application built with **Flask** that allows users to search for product prices on MercadoLibre and visualize them in a histogram. It uses web scraping to collect price data, the [monedas-api](https://github.com/pyoneerC/monedas-api) (also developed by me) for real-time currency conversion to USD, and **Matplotlib** to generate clean, insightful graphs that illustrate price variability.
+Mercadix helps you quickly understand the price landscape for any product on Mercado Libre (Argentina & Brasil). Simply search for an item, and Mercadix generates a clear histogram showing the range of prices currently listed. This allows you to see the minimum, maximum, average, and median prices at a glance, helping you make informed decisions.
+
+**No technical knowledge required!** Just type what you're looking for.
 
 > [!NOTE]  
-> [Available in all modern browsers!](https://mercado-libre-price-chart.vercel.app)
+> [Try it now! Available in all modern browsers!](https://mercado-libre-price-chart.vercel.app)
 
 ![App Screenshot](media/price_histogram.png)  
 ![App Demo GIF](media/demonstration.gif)
 
+## Who is this for?
+
+Mercadix is useful for:
+
+*   **Small Business Owners & Retailers:** Quickly check competitor pricing or understand the market value of products you sell or plan to sell.
+*   **Resellers:** Identify potentially underpriced items or gauge the typical selling price for products you want to flip.
+*   **Informed Consumers:** See if a listed price is a good deal compared to the rest of the market before you buy.
+*   **Anyone curious about pricing trends** on Mercado Libre.
+
 > [!TIP]  
-> You can search for any product you'd like using the search bar!
+> Want to know the price range for "Smart TV 50 pulgadas"? Just search it!
 
 ![iPhone Screenshot](media/iphone.png)
 
-## Features
+## Key Features
 
-- **Price Lookup**: Enter the product name and number of pages to scrape on MercadoLibre.
-- **Graph Generation**: Displays a histogram of prices, including key statistics like average, median, max, min, and standard deviation.
-- **Image Display**: Shows a representative image from the first result directly on the graph.
-- **User Interface**: Simple and intuitive interface for entering search parameters and viewing results.
+*   **Easy Price Lookup:** Enter the product name you want to analyze.
+*   **Clear Visualizations:** Get an easy-to-understand histogram of prices.
+*   **Key Price Stats:** Instantly see the average, median, highest, and lowest prices, plus the price variation (standard deviation).
+*   **Product Image:** See a sample image from the search results.
+*   **Simple Interface:** Designed for ease of use, no complex setup needed.
 
 > [!TIP]  
-> You can download the histogram image by clicking the "Download Image" button.
+> You can download the generated price graph image by clicking the "Download Image" button.
 
-## Installation
+## How it Works (Simplified)
+
+Mercadix searches Mercado Libre for the product you entered, collects the prices from the listings, and then uses statistical analysis and graphing tools (like Matplotlib) to create the visual price summary. It also uses the [monedas-api](https://github.com/pyoneerC/monedas-api) for optional currency conversion insights (though the primary display is in local currency).
+
+## Installation (For Developers)
 
 To run this project on your local machine, follow these steps:
 
@@ -71,7 +87,7 @@ The application will be available at `http://127.0.0.1:5000`
 
 ![Price Histogram](media/chocolate_histogram.png)
 
-## Running Tests
+## Running Tests (For Developers)
 
 ### Backend Tests
 To run backend tests, use the following command:
@@ -91,7 +107,7 @@ To run E2E tests, use the following command:
 npx playwright test
 ```
 
-## Technologies Used
+## Technologies Used (For Developers)
 
 - **Flask**: Web framework for Python.
 - **Matplotlib**: Library for creating visualizations.
@@ -99,7 +115,7 @@ npx playwright test
 - **Requests**: HTTP library for sending and receiving data.
 - **NumPy**: Library for numerical computing in Python.
 
-## Flow Diagram
+## Flow Diagram (Technical)
 
 ![Flow Diagram](media/diagrama.png)
 
