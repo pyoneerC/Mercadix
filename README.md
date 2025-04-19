@@ -71,6 +71,26 @@ The application will be available at `http://127.0.0.1:5000`
 
 ![Price Histogram](media/chocolate_histogram.png)
 
+## Running Tests
+
+### Backend Tests
+To run backend tests, use the following command:
+```
+pytest tests/backend
+```
+
+### Frontend Tests
+To run frontend tests, use the following command:
+```
+npm test
+```
+
+### End-to-End Tests
+To run E2E tests, use the following command:
+```
+npx playwright test
+```
+
 ## Technologies Used
 
 - **Flask**: Web framework for Python.
