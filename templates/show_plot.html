@@ -8,6 +8,9 @@
    <script src="https://cdn.tailwindcss.com"></script>
    <!-- Include ECharts -->
    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+   <!-- Include Tippy.js para tooltips -->
+   <script src="https://unpkg.com/@popperjs/core@2"></script>
+   <script src="https://unpkg.com/tippy.js@6"></script>
    <style>
       #chart-container {
          width: 100%;
@@ -39,6 +42,40 @@
          width: 20px;
          height: 14px;
       }
+      .filter-info {
+         display: inline-flex;
+         align-items: center;
+         justify-content: center;
+         width: 18px;
+         height: 18px;
+         border-radius: 50%;
+         background-color: rgba(255, 255, 255, 0.3);
+         color: #2563eb;
+         font-size: 12px;
+         font-weight: bold;
+         cursor: pointer;
+         margin-left: 4px;
+      }
+      .tippy-box {
+         background-color: #fff;
+         color: #333;
+         border: 1px solid #e2e8f0;
+         border-radius: 0.375rem;
+         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+         padding: 0.5rem;
+         max-width: 300px !important;
+      }
+      .tippy-box .tippy-content {
+         padding: 0.5rem;
+      }
+      .filter-help-panel {
+         background-color: rgba(245, 247, 250, 0.9);
+         border: 1px solid #e2e8f0;
+         border-radius: 0.375rem;
+         padding: 1rem;
+         margin-bottom: 1rem;
+         font-size: 0.875rem;
+      }
    </style>
 </head>
 <body class="bg-gradient-to-r from-blue-50 to-blue-100 min-h-screen flex items-center justify-center p-6">
@@ -52,6 +89,30 @@
          </div>
       </header>
       <main class="p-6">
+         <!-- Información sobre filtros -->
+         <div id="filter-help-panel" class="filter-help-panel hidden">
+            <h4 class="font-semibold mb-2">Tipos de filtrado disponibles:</h4>
+            <ul class="space-y-2">
+               <li>
+                  <span class="font-medium text-blue-700">Estándar:</span>
+                  <span>Excluye valores atípicos (outliers) estadísticos que están más allá de 3 desviaciones estándar de la media. Ideal para una visión general de precios normales.</span>
+               </li>
+               <li>
+                  <span class="font-medium text-blue-700">Agresivo:</span>
+                  <span>Elimina productos con precios menores al 40% del precio mediano. Útil para filtrar accesorios y productos no relacionados (como un soporte de $50 cuando buscas una consola PS4).</span>
+               </li>
+               <li>
+                  <span class="font-medium text-blue-700">Todos:</span>
+                  <span>Muestra todos los productos sin filtrar, incluyendo accesorios y valores atípicos. Proporciona el panorama completo de los resultados de búsqueda.</span>
+               </li>
+               <li>
+                  <span class="font-medium text-blue-700">Filtrado manual:</span>
+                  <span>Permite examinar cada producto individualmente y elegir cuáles incluir o excluir del análisis.</span>
+               </li>
+            </ul>
+            <button id="close-filter-help" class="mt-2 text-blue-600 underline text-sm">Cerrar</button>
+         </div>
+
          <!-- Chart Tabs -->
          <div class="flex border-b mb-4">
             <button class="chart-tab chart-tab-active py-2 px-4 font-medium rounded-t-lg" data-target="interactive">
@@ -209,6 +270,39 @@
                   downloadBtn.href = originalHref;
                }
             });
+         });
+         
+         // Configurar tooltips después de que se inicialice el gráfico
+         document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+               const filterControls = document.getElementById('filter-controls');
+               
+               if (filterControls) {
+                  // Añadir botón de ayuda junto al título del filtro
+                  const filterTitle = filterControls.querySelector('span.font-medium');
+                  if (filterTitle) {
+                     const helpButton = document.createElement('span');
+                     helpButton.className = 'filter-info';
+                     helpButton.textContent = '?';
+                     helpButton.id = 'filter-help-button';
+                     filterTitle.appendChild(helpButton);
+                     
+                     // Configurar el evento click para mostrar/ocultar el panel de ayuda
+                     helpButton.addEventListener('click', function() {
+                        const helpPanel = document.getElementById('filter-help-panel');
+                        helpPanel.classList.toggle('hidden');
+                     });
+                  }
+                  
+                  // Configurar el botón para cerrar el panel de ayuda
+                  const closeHelpBtn = document.getElementById('close-filter-help');
+                  if (closeHelpBtn) {
+                     closeHelpBtn.addEventListener('click', function() {
+                        document.getElementById('filter-help-panel').classList.add('hidden');
+                     });
+                  }
+               }
+            }, 500); // Pequeño retraso para asegurar que los elementos existen
          });
       });
    </script>
