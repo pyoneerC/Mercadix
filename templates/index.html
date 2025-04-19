@@ -178,6 +178,25 @@
                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
         
+        <!-- Product condition filter -->
+        <div>
+            <label class="block text-gray-700 font-medium mb-2">Condición del producto:</label>
+            <div class="toggle-container">
+                <label for="condition-all" class="toggle-option active" id="toggle-all-condition">
+                    <input type="radio" id="condition-all" name="condition" value="all" checked class="sr-only" />
+                    Todos
+                </label>
+                <label for="condition-new" class="toggle-option" id="toggle-new-condition">
+                    <input type="radio" id="condition-new" name="condition" value="new" class="sr-only" />
+                    Nuevo
+                </label>
+                <label for="condition-used" class="toggle-option" id="toggle-used-condition">
+                    <input type="radio" id="condition-used" name="condition" value="used" class="sr-only" />
+                    Usado
+                </label>
+            </div>
+        </div>
+        
         <div>
             <label class="block text-gray-700 font-medium mb-2">Cantidad de páginas a escanear:</label>
             <div class="flex justify-between gap-2">
@@ -280,6 +299,35 @@
         const toggleUs = document.getElementById('toggle-us');
         const countryInput = document.getElementById('country');
         const mlButton = document.getElementById('ml-button');
+        
+        // Product condition toggle functionality
+        const toggleAllCondition = document.getElementById('toggle-all-condition');
+        const toggleNewCondition = document.getElementById('toggle-new-condition');
+        const toggleUsedCondition = document.getElementById('toggle-used-condition');
+        
+        // Toggle All Conditions
+        toggleAllCondition.addEventListener('click', function() {
+            toggleAllCondition.classList.add('active');
+            toggleNewCondition.classList.remove('active');
+            toggleUsedCondition.classList.remove('active');
+            document.getElementById('condition-all').checked = true;
+        });
+        
+        // Toggle New Condition
+        toggleNewCondition.addEventListener('click', function() {
+            toggleNewCondition.classList.add('active');
+            toggleAllCondition.classList.remove('active');
+            toggleUsedCondition.classList.remove('active');
+            document.getElementById('condition-new').checked = true;
+        });
+        
+        // Toggle Used Condition
+        toggleUsedCondition.addEventListener('click', function() {
+            toggleUsedCondition.classList.add('active');
+            toggleAllCondition.classList.remove('active');
+            toggleNewCondition.classList.remove('active');
+            document.getElementById('condition-used').checked = true;
+        });
         
         // Toggle Argentina
         toggleAr.addEventListener('click', function() {

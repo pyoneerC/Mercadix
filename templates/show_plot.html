@@ -74,6 +74,25 @@
             <img src="https://flagcdn.com/w20/{{ country_code }}.png" srcset="https://flagcdn.com/w40/{{ country_code }}.png 2x" alt="{{ country_name }}">
             {{ country_name }}
          </div>
+         {% if condition != "all" and country_code != "us" %}
+         <div class="mt-2 inline-block bg-blue-700 px-3 py-1 rounded-full text-sm">
+            {% if condition == "new" %}
+            <span class="inline-flex items-center">
+               <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+               </svg>
+               Nuevos
+            </span>
+            {% else %}
+            <span class="inline-flex items-center">
+               <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+               </svg>
+               Usados
+            </span>
+            {% endif %}
+         </div>
+         {% endif %}
       </header>
       <main class="p-6">
          <!-- Panel de ayuda de filtros (oculto por defecto) -->

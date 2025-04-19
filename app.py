@@ -95,6 +95,7 @@ def index():
         item = request.form["item"].strip()
         number_of_pages = request.form["number_of_pages"].strip()
         country_code = request.form.get("country", "ar")  # Default to Argentina if not specified
+        condition = request.form.get("condition", "all")  # Get the condition parameter with "all" as default
 
         # Validate country code
         if country_code not in COUNTRY_CONFIG:
@@ -112,7 +113,11 @@ def index():
         except ValueError:
             return render_template("error.html", error_message="Number of pages must be a valid integer."), 400
 
-        return redirect(url_for("show_plot", item=item, number_of_pages=number_of_pages, country=country_code))
+        # Validate condition
+        if condition not in ["all", "new", "used"]:
+            return render_template("error.html", error_message="Invalid condition parameter."), 400
+
+        return redirect(url_for("show_plot", item=item, number_of_pages=number_of_pages, country=country_code, condition=condition))
     return render_template("index.html")
 
 
@@ -131,9 +136,9 @@ def serve_assetlinks():
     return send_file('assetlinks.json', mimetype='application/json')
 
 
-def get_prices(item, number_of_pages, country_code='ar'):
+def get_prices(item, number_of_pages, country_code='ar', condition='all'):
     """Fetch the prices of the given item from MercadoLibre/MercadoLivre."""
-    cache_key = (item, number_of_pages, country_code)
+    cache_key = (item, number_of_pages, country_code, condition)
     if cache_key in prices_cache:
         return prices_cache[cache_key]
 
@@ -141,9 +146,16 @@ def get_prices(item, number_of_pages, country_code='ar'):
     failed_pages = 0
     domain = COUNTRY_CONFIG[country_code]['domain']
     
+    # Construct URL with condition filter if specified
+    condition_param = ""
+    if condition == "new":
+        condition_param = "_ITEM*CONDITION_2230284"  # MercadoLibre ID for New condition
+    elif condition == "used":
+        condition_param = "_ITEM*CONDITION_2230581"  # MercadoLibre ID for Used condition
+    
     for i in range(number_of_pages):
         start_item = i * 50 + 1
-        url = f"https://listado.{domain}/{item}_Desde_{start_item}_NoIndex_True"
+        url = f"https://listado.{domain}/{item}{condition_param}_Desde_{start_item}_NoIndex_True"
         try:
             response = requests.get(url)
             response.raise_for_status()
@@ -247,7 +259,7 @@ def format_x(value, tick_number):
     return f"{int(value):,}"
 
 
-def plot_prices(prices_list, item, url, failed_pages, country_code='ar', filter_outliers=True, threshold=3):
+def plot_prices(prices_list, item, url, failed_pages, country_code='ar', filter_outliers=True, threshold=3, condition='all'):
     country_config = COUNTRY_CONFIG[country_code]
     currency = country_config['currency']
     country_name = country_config['country_name']
@@ -307,8 +319,15 @@ def plot_prices(prices_list, item, url, failed_pages, country_code='ar', filter_
     else:
         marketplace_name = f"MercadoLi{'v' if country_code == 'br' else 'b'}re"
     
+    # Add condition text for title
+    condition_text = ""
+    if condition == "new":
+        condition_text = " - Nuevos"
+    elif condition == "used":
+        condition_text = " - Usados"
+    
     plt.title(
-        f'Histogram of {item.replace("-", " ").upper()} prices in {marketplace_name} {country_name} ({current_date})\n'
+        f'Histogram of {item.replace("-", " ").upper()} prices in {marketplace_name} {country_name}{condition_text} ({current_date})\n'
         f"Number of items indexed: {len(prices_list)} ({request.args.get('number_of_pages')} pages)\n"
         f"URL: {url}\n"
         f"Failed to parse {failed_pages} pages."
@@ -363,6 +382,7 @@ def show_plot():
     item = request.args.get("item", "").strip()
     number_of_pages = request.args.get("number_of_pages", "").strip()
     country_code = request.args.get("country", "ar")  # Default to Argentina if not specified
+    condition = request.args.get("condition", "all")  # Get the condition parameter with "all" as default
 
     # Validate country code
     if country_code not in COUNTRY_CONFIG:
@@ -384,7 +404,7 @@ def show_plot():
     if country_code == 'us':
         prices_list, url, failed_pages = get_amazon_prices(item, number_of_pages, country_code)
     else:
-        prices_list, url, failed_pages = get_prices(item, number_of_pages, country_code)
+        prices_list, url, failed_pages = get_prices(item, number_of_pages, country_code, condition)
         
     if prices_list is None or url is None:
         error_message = "Failed to fetch prices. Please try searching fewer pages or check the item name."
@@ -409,7 +429,7 @@ def show_plot():
         exchange_rate = country_config['fixed_usd_rate']
     
     # Generate the plot for backward compatibility and image download
-    plot_base64 = plot_prices(prices_list, item, url, failed_pages, country_code)
+    plot_base64 = plot_prices(prices_list, item, url, failed_pages, country_code, condition=condition)
     if plot_base64 is None:
         error_message = "Failed to generate plot. Please try again later."
         return render_template("error.html", error_message=error_message), 500
@@ -453,6 +473,7 @@ def show_plot():
         currency=country_config['currency'],
         country_name=country_config['country_name'],
         marketplace_name=marketplace_name,
+        condition=condition,
     )
 
 
