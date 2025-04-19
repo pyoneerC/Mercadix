@@ -8,45 +8,42 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <meta name="theme-color" content="#317EFB" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/idxstyle.css') }}">
-</head>
-<head>
-  <meta name="theme-color" content="#317EFB"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="{{url_for('static', filename='icons/android-icon-144x144.png')}}" type="image/png">
-  <link rel="icon" href="{{url_for('static', filename='icons/android-icon-192x192.png')}}" type="image/png">
-  <link rel="icon" href="{{url_for('static', filename='icons/icon-512x512.png')}}" type="image/png">
-  <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/apple-icon-144x144.png')}}" type="image/png">
-  <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/apple-icon-192x192.png')}}" type="image/png">
-  <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/icon-512x512.png')}}" type="image/png">
-  <link rel="manifest" href="/manifest.json">
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register("/sw.js").then(function(registration) {
-          console.log('ServiceWorker registration successful with scope: ', registration.scope);
-        }, function(err) {
-          console.log('ServiceWorker registration failed: ', err);
-        });
-      });
-    }
-  </script>
+    <meta name="theme-color" content="#317EFB"/>
+    <link rel="icon" href="{{url_for('static', filename='icons/android-icon-144x144.png')}}" type="image/png">
+    <link rel="icon" href="{{url_for('static', filename='icons/android-icon-192x192.png')}}" type="image/png">
+    <link rel="icon" href="{{url_for('static', filename='icons/icon-512x512.png')}}" type="image/png">
+    <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/apple-icon-144x144.png')}}" type="image/png">
+    <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/apple-icon-192x192.png')}}" type="image/png">
+    <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/icon-512x512.png')}}" type="image/png">
+    <link rel="manifest" href="/manifest.json">
+    <script>
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', function() {
+            navigator.serviceWorker.register("/sw.js").then(function(registration) {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, function(err) {
+              console.log('ServiceWorker registration failed: ', err);
+            });
+          });
+        }
+    </script>
     <link rel="apple-touch-icon" sizes="57x57" href="static/apple-icon-57x57.png">
-<link rel="apple-touch-icon" sizes="60x60" href="static/apple-icon-60x60.png">
-<link rel="apple-touch-icon" sizes="72x72" href="static/apple-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="76x76" href="static/apple-icon-76x76.png">
-<link rel="apple-touch-icon" sizes="114x114" href="static/apple-icon-114x114.png">
-<link rel="apple-touch-icon" sizes="120x120" href="static/apple-icon-120x120.png">
-<link rel="apple-touch-icon" sizes="144x144" href="static/apple-icon-144x144.png">
-<link rel="apple-touch-icon" sizes="152x152" href="static/apple-icon-152x152.png">
-<link rel="apple-touch-icon" sizes="180x180" href="static/apple-icon-180x180.png">
-<link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
-<link rel="icon" type="image/png" sizes="32x32" href="static/icons/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="96x96" href="static/icons/favicon-96x96.png">
-<link rel="icon" type="image/png" sizes="16x16" href="static/icons/favicon-16x16.png">
-<link rel="manifest" href="/manifest.json">
-<meta name="msapplication-TileColor" content="#ffffff">
-<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
-<meta name="theme-color" content="#ffffff">
+    <link rel="apple-touch-icon" sizes="60x60" href="static/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="static/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="static/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="static/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="static/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="static/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="static/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="static/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="static/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="static/icons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="static/icons/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
 <style>
     /* Custom toggle button styles */
     .toggle-container {
@@ -79,6 +76,9 @@
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
     }
+    .toggle-option:nth-child(2) {
+        border-radius: 0;
+    }
     .toggle-option:last-child {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
@@ -86,6 +86,43 @@
     .toggle-option img {
         width: 24px;
         height: 16px;
+    }
+    
+    /* Ad container styles */
+    .ad-container {
+        margin-top: 1.5rem;
+        padding: 0.5rem;
+        background-color: #f9fafb;
+        border-radius: 0.375rem;
+        text-align: center;
+        border: 1px dashed #d1d5db;
+    }
+    .ad-container p {
+        font-size: 0.75rem;
+        color: #6b7280;
+        margin-bottom: 0.25rem;
+    }
+    
+    /* Amazon button styles */
+    .amazon-button {
+        background-color: #FF9900;
+        color: #000000;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    .amazon-button:hover {
+        background-color: #e88b00;
+    }
+    
+    /* Traditional Mercadolibre button styles */
+    .ml-button {
+        background-color: #3b82f6;
+        color: #ffffff;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    .ml-button:hover {
+        background-color: #2563eb;
     }
 </style>
 </head>
@@ -118,7 +155,7 @@
 <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
     <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Mercadix</h1>
     <form id="price-form" action="/" method="post" class="space-y-4">
-        <!-- Country selector toggle -->
+        <!-- Country/Marketplace selector toggle -->
         <div class="toggle-container">
             <label for="country-ar" class="toggle-option active" id="toggle-ar">
                 <img src="https://flagcdn.com/w20/ar.png" srcset="https://flagcdn.com/w40/ar.png 2x" alt="Argentina">
@@ -128,12 +165,16 @@
                 <img src="https://flagcdn.com/w20/br.png" srcset="https://flagcdn.com/w40/br.png 2x" alt="Brasil">
                 Brasil
             </label>
+            <label for="country-us" class="toggle-option" id="toggle-us">
+                <img src="https://flagcdn.com/w20/us.png" srcset="https://flagcdn.com/w40/us.png 2x" alt="USA">
+                Amazon
+            </label>
             <input type="hidden" name="country" id="country" value="ar">
         </div>
 
         <div>
-            <label for="item" class="block text-gray-700 font-medium mb-1">Artículo a buscar:</label>
-            <input type="text" id="item" name="item" required placeholder="Raqueta de tenis"
+            <label for="item" class="block text-gray-700 font-medium mb-1">Producto a buscar:</label>
+            <input type="text" id="item" name="item" required placeholder="Celular Samsung Galaxy"
                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
         
@@ -141,21 +182,21 @@
             <label class="block text-gray-700 font-medium mb-2">Cantidad de páginas a escanear:</label>
             <div class="flex justify-between gap-2">
                 <label for="page-option-1" class="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 text-white font-medium rounded-md cursor-pointer hover:bg-blue-700 transition duration-200">
-                    <input type="radio" id="page-option-1" name="number_of_pages" value="1" checked class="hidden" />
+                    <input type="radio" id="page-option-1" name="number_of_pages" value="1" checked class="sr-only" />
                     <span class="flex items-center justify-center w-5 h-5 border-2 border-white rounded-full">
                         <span class="w-3 h-3 bg-white rounded-full"></span>
                     </span>
                     1
                 </label>
                 <label for="page-option-2" class="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-100 text-blue-800 font-medium rounded-md cursor-pointer hover:bg-blue-200 transition duration-200">
-                    <input type="radio" id="page-option-2" name="number_of_pages" value="2" class="hidden" />
+                    <input type="radio" id="page-option-2" name="number_of_pages" value="2" class="sr-only" />
                     <span class="flex items-center justify-center w-5 h-5 border-2 border-blue-800 rounded-full">
                         <span class="w-0 h-0 bg-blue-800 rounded-full transition-all duration-200"></span>
                     </span>
                     2
                 </label>
                 <label for="page-option-3" class="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-100 text-blue-800 font-medium rounded-md cursor-pointer hover:bg-blue-200 transition duration-200">
-                    <input type="radio" id="page-option-3" name="number_of_pages" value="3" class="hidden" />
+                    <input type="radio" id="page-option-3" name="number_of_pages" value="3" class="sr-only" />
                     <span class="flex items-center justify-center w-5 h-5 border-2 border-blue-800 rounded-full">
                         <span class="w-0 h-0 bg-blue-800 rounded-full transition-all duration-200"></span>
                     </span>
@@ -164,9 +205,8 @@
             </div>
         </div>
         
-        <button type="submit" id="submit-button"
-                class="w-full bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 transition duration-200">
-            Generar Histograma
+        <button type="submit" id="ml-button" class="w-full ml-button py-3 rounded-md transition duration-200">
+            Buscar en MercadoLibre
         </button>
     </form>
 
@@ -187,11 +227,19 @@
             un gráfico simple con el rango de precios: el más bajo, el más alto y el promedio. Ideal para comparar precios, chequear a la competencia o simplemente ver si es una buena oferta.
         </p>
     </div>
+    
+    <!-- Ad Space -->
+    <div class="ad-container">
+        <p>PUBLICIDAD</p>
+        <div id="ad-placeholder" style="height: 90px; display: flex; align-items: center; justify-content: center; background-color: #f3f4f6;">
+            <span class="text-gray-500">Anuncio publicitario</span>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="mt-10 border-t border-gray-200 pt-6 text-sm text-gray-600">
         <div class="flex flex-col items-center gap-2 text-center">
-            <p>&copy; 2025 <i>PyoneerC</i> — No afiliado a Mercado Libre.</p>
+            <p>&copy; 2025 <i>PyoneerC</i> — No afiliado a MercadoLibre ni Amazon.</p>
             <div class="flex flex-wrap justify-center gap-3">
                 <a href="https://github.com/pyoneerC/Mercadix" target="_blank" class="text-blue-600 hover:underline">
                     GitHub
@@ -216,19 +264,49 @@
     document.addEventListener('DOMContentLoaded', function() {
         const toggleAr = document.getElementById('toggle-ar');
         const toggleBr = document.getElementById('toggle-br');
+        const toggleUs = document.getElementById('toggle-us');
         const countryInput = document.getElementById('country');
+        const mlButton = document.getElementById('ml-button');
         
+        // Toggle Argentina
         toggleAr.addEventListener('click', function() {
             toggleAr.classList.add('active');
             toggleBr.classList.remove('active');
+            toggleUs.classList.remove('active');
             countryInput.value = 'ar';
+            updateButtons('ar');
         });
         
+        // Toggle Brazil
         toggleBr.addEventListener('click', function() {
             toggleBr.classList.add('active');
             toggleAr.classList.remove('active');
+            toggleUs.classList.remove('active');
             countryInput.value = 'br';
+            updateButtons('br');
         });
+        
+        // Toggle Amazon US
+        toggleUs.addEventListener('click', function() {
+            toggleUs.classList.add('active');
+            toggleAr.classList.remove('active');
+            toggleBr.classList.remove('active');
+            countryInput.value = 'us';
+            updateButtons('us');
+        });
+        
+        // Update button text based on selected marketplace
+        function updateButtons(countryCode) {
+            if (countryCode === 'ar') {
+                mlButton.textContent = 'Buscar en MercadoLibre';
+            } else if (countryCode === 'br') {
+                mlButton.textContent = 'Buscar em MercadoLivre';
+            } else if (countryCode === 'us') {
+                mlButton.textContent = 'Search on Amazon';
+            } else {
+                mlButton.textContent = 'Buscar';
+            }
+        }
         
         // Page options toggle functionality
         const pageOptions = document.querySelectorAll('input[name="number_of_pages"]');
@@ -241,8 +319,10 @@
                     
                     // Reset the circle indicator
                     const circle = label.querySelector('span > span');
-                    circle.classList.remove('w-3', 'h-3');
-                    circle.classList.add('w-0', 'h-0');
+                    if (circle) {
+                        circle.classList.remove('w-3', 'h-3');
+                        circle.classList.add('w-0', 'h-0');
+                    }
                 });
                 
                 // Set active state for the selected option
@@ -252,8 +332,23 @@
                 
                 // Update the circle indicator
                 const circle = selectedLabel.querySelector('span > span');
-                circle.classList.remove('w-0', 'h-0');
-                circle.classList.add('w-3', 'h-3');
+                if (circle) {
+                    circle.classList.remove('w-0', 'h-0');
+                    circle.classList.add('w-3', 'h-3');
+                }
+            });
+        });
+        
+        // Make the entire label clickable for page options
+        document.querySelectorAll('label[for^="page-option-"]').forEach(label => {
+            label.addEventListener('click', function() {
+                const radioId = this.getAttribute('for');
+                const radio = document.getElementById(radioId);
+                radio.checked = true;
+                
+                // Manually trigger the change event
+                const event = new Event('change');
+                radio.dispatchEvent(event);
             });
         });
     });

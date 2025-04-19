@@ -37,6 +37,14 @@ COUNTRY_CONFIG = {
         'exchange_rate_api': None,
         'needs_exchange_rate': False,
         'fixed_usd_rate': 5.0  # Fixed approximate exchange rate for Brazil (1 USD = ~5 BRL)
+    },
+    'us': {  # Amazon US
+        'domain': 'amazon.com',
+        'currency': 'USD',
+        'country_name': 'United States',
+        'exchange_rate_api': None,
+        'needs_exchange_rate': False,
+        'fixed_usd_rate': 1.0  # USD is the base currency
     }
 }
 
@@ -165,6 +173,75 @@ def get_prices(item, number_of_pages, country_code='ar'):
     return prices_list, url, failed_pages
 
 
+def get_amazon_prices(item, number_of_pages, country_code='us'):
+    """Fetch the prices of the given item from Amazon."""
+    cache_key = (item, number_of_pages, country_code)
+    if cache_key in prices_cache:
+        return prices_cache[cache_key]
+
+    prices_list = []
+    failed_pages = 0
+    domain = COUNTRY_CONFIG[country_code]['domain']
+    
+    # Add custom headers to avoid being blocked by Amazon
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Connection': 'keep-alive',
+    }
+    
+    for i in range(number_of_pages):
+        page = i + 1
+        # Amazon uses a different URL format for pagination
+        url = f"https://www.{domain}/s?k={item.replace(' ', '+')}"
+        if page > 1:
+            url += f"&page={page}"
+            
+        try:
+            response = requests.get(url, headers=headers)
+            response.raise_for_status()
+            soup = BeautifulSoup(response.content, "html.parser")
+            
+            # Amazon has multiple price formats, we need to check them all
+            price_elements = soup.select('.a-price .a-offscreen')
+            
+            # If no prices are found, stop scraping further pages
+            if not price_elements:
+                app.logger.info(f"No more results found after {i} pages.")
+                break
+
+            # Extract prices from the elements
+            for price_element in price_elements:
+                price_text = price_element.text.strip()
+                # Extract numeric value from price (e.g., $24.99 -> 24.99)
+                price_match = re.search(r'[\d,]+\.?\d*', price_text)
+                if price_match:
+                    price_str = price_match.group().replace(',', '')
+                    try:
+                        # Convert to float for decimal handling
+                        price = float(price_str)
+                        # Convert to cents/pennies for consistency with the rest of the app
+                        price_cents = int(price * 100)
+                        prices_list.append(price_cents)
+                    except ValueError:
+                        continue
+                        
+        except requests.exceptions.RequestException as e:
+            app.logger.error(f"Error fetching prices: {e}")
+            failed_pages += 1
+
+    if not prices_list:
+        app.logger.info("No results found for the given search.")
+        return None, None, failed_pages
+
+    # Convert from cents back to dollars for display
+    prices_list = [p / 100 for p in prices_list]
+    
+    prices_cache[cache_key] = (prices_list, url, failed_pages)
+    return prices_list, url, failed_pages
+
+
 def format_x(value, tick_number):
     """Format the x-axis values."""
     return f"{int(value):,}"
@@ -212,7 +289,8 @@ def plot_prices(prices_list, item, url, failed_pages, country_code='ar', filter_
     y_position = plt.gca().get_ylim()[1] * 0.05
     # Adjust offset for label text depending on median value
     x_pos_offset = (
-        500 if median_price <= 10000
+        0.5 if median_price <= 10 and country_code == 'us'  # For Amazon USD prices
+        else 500 if median_price <= 10000
         else 1000 if median_price <= 20000
         else 2000 if median_price <= 50000
         else 3500 if median_price <= 70000
@@ -222,8 +300,15 @@ def plot_prices(prices_list, item, url, failed_pages, country_code='ar', filter_
     plt.xlabel(f"Price in {currency}")
     plt.ylabel("Frequency")
     current_date = datetime.date.today().strftime("%d/%m/%Y")
+    
+    # Determine marketplace name based on country code
+    if country_code == 'us':
+        marketplace_name = "Amazon"
+    else:
+        marketplace_name = f"MercadoLi{'v' if country_code == 'br' else 'b'}re"
+    
     plt.title(
-        f'Histogram of {item.replace("-", " ").upper()} prices in MercadoLi{"v" if country_code == "br" else "b"}re {country_name} ({current_date})\n'
+        f'Histogram of {item.replace("-", " ").upper()} prices in {marketplace_name} {country_name} ({current_date})\n'
         f"Number of items indexed: {len(prices_list)} ({request.args.get('number_of_pages')} pages)\n"
         f"URL: {url}\n"
         f"Failed to parse {failed_pages} pages."
@@ -231,13 +316,23 @@ def plot_prices(prices_list, item, url, failed_pages, country_code='ar', filter_
 
     def plot_stat_line(stat_value, color, label, linestyle="solid", linewidth=1):
         plt.axvline(stat_value, color=color, linestyle=linestyle, linewidth=linewidth)
-        plt.text(
-            stat_value + x_pos_offset,
-            y_position,
-            f"{label}: {int(stat_value):,} {currency} ({int(stat_value / venta_dolar):,} USD)",
-            rotation=90,
-            color=color,
-        )
+        # For Amazon (USD), don't show USD conversion since it's already in USD
+        if country_code == 'us':
+            plt.text(
+                stat_value + x_pos_offset,
+                y_position,
+                f"{label}: ${stat_value:.2f} {currency}",
+                rotation=90,
+                color=color,
+            )
+        else:
+            plt.text(
+                stat_value + x_pos_offset,
+                y_position,
+                f"{label}: {int(stat_value):,} {currency} ({int(stat_value / venta_dolar):,} USD)",
+                rotation=90,
+                color=color,
+            )
 
     plot_stat_line(median_price, "red", "Median")
     plot_stat_line(avg_price, "purple", "Avg")
@@ -285,7 +380,12 @@ def show_plot():
     except ValueError:
         return render_template("error.html", error_message="Number of pages must be a valid integer."), 400
 
-    prices_list, url, failed_pages = get_prices(item, number_of_pages, country_code)
+    # Choose the appropriate price fetching function based on country code
+    if country_code == 'us':
+        prices_list, url, failed_pages = get_amazon_prices(item, number_of_pages, country_code)
+    else:
+        prices_list, url, failed_pages = get_prices(item, number_of_pages, country_code)
+        
     if prices_list is None or url is None:
         error_message = "Failed to fetch prices. Please try searching fewer pages or check the item name."
         return render_template("error.html", error_message=error_message), 500
@@ -301,7 +401,7 @@ def show_plot():
     country_config = COUNTRY_CONFIG[country_code]
     currency = country_config['currency']
     
-    # Get exchange rate - use fixed rate for Brazil
+    # Get exchange rate - use fixed rate for non-Argentina countries
     if country_config['needs_exchange_rate']:
         exchange_rate_str = get_exchange_rate(country_code)
         exchange_rate = float(exchange_rate_str.replace(f" {currency}", ""))
@@ -325,6 +425,9 @@ def show_plot():
     prices_json = json.dumps(non_outliers)
     outliers_json = json.dumps(outliers)
 
+    # Additional template variables for Amazon (US)
+    marketplace_name = "Amazon" if country_code == 'us' else f"MercadoLi{'v' if country_code == 'br' else 'b'}re"
+    
     return render_template(
         "show_plot.html",
         plot_base64=plot_base64,
@@ -349,6 +452,7 @@ def show_plot():
         country_code=country_code,
         currency=country_config['currency'],
         country_name=country_config['country_name'],
+        marketplace_name=marketplace_name,
     )
 
 

@@ -69,7 +69,7 @@
    <div class="bg-white shadow-lg rounded-lg overflow-hidden max-w-5xl w-full">
       <header class="bg-blue-600 text-white text-center py-6">
          <h1 class="text-4xl font-bold">Histograma de Precios</h1>
-         <p class="text-sm mt-2">Precios de {{ item | upper }} en MercadoLi{{ "v" if country_code == "br" else "b" }}re</p>
+         <p class="text-sm mt-2">Precios de {{ item | upper }} en {{ marketplace_name }}</p>
          <div class="country-badge">
             <img src="https://flagcdn.com/w20/{{ country_code }}.png" srcset="https://flagcdn.com/w40/{{ country_code }}.png 2x" alt="{{ country_name }}">
             {{ country_name }}
@@ -177,7 +177,7 @@
             </a>
             <a
                href="data:image/png;base64,{{ plot_base64 }}"
-               download="{{ item }}_price_histogram_MercadoLi{{ 'v' if country_code == 'br' else 'b' }}re_{{ country_code }}_{{ current_date }}_{{ number_of_pages }}_pages.png"
+               download="{{ item }}_price_histogram_{{ marketplace_name }}_{{ country_code }}_{{ current_date }}_{{ number_of_pages }}_pages.png"
                class="bg-green-200 text-green-800 py-2 px-4 rounded-lg shadow hover:bg-green-300 transition duration-300"
                id="download-btn"
             >
@@ -188,14 +188,14 @@
                target="_blank"
                class="bg-gray-200 text-gray-800 py-2 px-4 rounded-lg shadow hover:bg-gray-300 transition duration-300"
             >
-               Ver en MercadoLi{{ "v" if country_code == "br" else "b" }}re
+               Ver en {{ marketplace_name }}
             </a>
          </div>
       </main>
       <footer class="bg-gray-100 text-center py-4 text-sm text-gray-500">
-         &copy; 2025 PyoneerC. No afiliado a MercadoLi{{ "v" if country_code == "br" else "b" }}re.
+         &copy; 2025 PyoneerC. No afiliado a {% if country_code == 'us' %}Amazon{% else %}MercadoLi{{ "v" if country_code == "br" else "b" }}re{% endif %}.
          <a
-            href="https://github.com/pyoneerC/mercado-libre-price-chart"
+            href="https://github.com/pyoneerC/Mercadix"
             target="_blank"
             class="text-blue-600 hover:underline"
          >
